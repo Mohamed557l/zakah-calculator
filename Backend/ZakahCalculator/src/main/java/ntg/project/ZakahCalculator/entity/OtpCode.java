@@ -57,5 +57,14 @@ public class OtpCode {
         expiresAt = LocalDateTime.now().plusMinutes(5);
     }
 
+    public boolean isValid() {
+        return !used && LocalDateTime.now().isBefore(expiresAt);
+    }
+
+
+    public void markAsUsed() {
+        this.used = true;
+    }
+
 }
 

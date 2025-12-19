@@ -8,18 +8,19 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
-#  mail:
-#    protocol: "smtp"
-#    host: "smtp.gmail.com"
-#    port: "587"
-#    username: "madel25810@gmail.com"
-#    password: "dqmkaksbmwtnrdkh"
-#    properties:
-#      mail:
-#        smtp:
-#          auth: true
-#          starttls:
-#            enable: true
+  mail:
+    protocol: "smtp"
+    host: "smtp.gmail.com"
+    port: "587"
+    username: "madel25810@gmail.com"
+    password: "lfhuuuijgulvyvyx
+"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
   datasource:
     url: jdbc:postgresql://ep-wandering-glitter-addacktd.c-2.us-east-1.aws.neon.tech/zakah_calc_db?user=neondb_owner&password=npg_ZJLjg4kaCcE7&sslmode=require
@@ -53,3 +54,5 @@ app:
       secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
       access-token-expiration: 86400000 # a day
       refresh-token-expiration: 604800000 # 7 days
+frontend:
+  url: "http://localhost:4200"

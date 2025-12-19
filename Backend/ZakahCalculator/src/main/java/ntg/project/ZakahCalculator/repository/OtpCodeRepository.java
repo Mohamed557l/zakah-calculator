@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface OtpCodeRepository extends JpaRepository<OtpCode, Long> {
 
-    Optional<OtpCode> findByUserAndTypeAndUsedFalse(User user, OtpType type);
+    Optional<OtpCode> findByUserIdAndTypeAndUsedFalse(Long userId, OtpType type);
 
     Optional<OtpCode> findByCodeAndTypeAndUsedFalse(String code, OtpType type);
 }
