@@ -7,7 +7,6 @@ import ntg.project.ZakahCalculator.dto.response.DeleteAccountResponse;
 import ntg.project.ZakahCalculator.entity.User;
 import ntg.project.ZakahCalculator.exception.BusinessException;
 import ntg.project.ZakahCalculator.exception.ErrorCode;
-import ntg.project.ZakahCalculator.mapper.DeleteAccountMapper;
 import ntg.project.ZakahCalculator.mapper.UserMapper;
 import ntg.project.ZakahCalculator.repository.UserRepository;
 import ntg.project.ZakahCalculator.service.UserService;
@@ -24,7 +23,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
-    private final DeleteAccountMapper deleteAccountMapper;
 
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -76,9 +74,11 @@ public class UserServiceImpl implements UserService {
         LocalDateTime deletedAt = LocalDateTime.now();
         LocalDateTime restoreUntil = deletedAt.plusDays(30);
 
+        // تحديث حالة الحذف في قاعدة البيانات
         userRepository.softDelete(userId, deletedAt);
 
-        return deleteAccountMapper.toResponse(
+        // استخدام UserMapper بدلاً من DeleteAccountMapper
+        return userMapper.toDeleteAccountResponse(
                 deletedAt.toLocalDate(),
                 restoreUntil.toLocalDate()
         );

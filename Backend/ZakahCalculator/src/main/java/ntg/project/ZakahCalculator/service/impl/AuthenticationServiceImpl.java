@@ -12,7 +12,6 @@ import ntg.project.ZakahCalculator.exception.BusinessException;
 import ntg.project.ZakahCalculator.exception.ErrorCode;
 import ntg.project.ZakahCalculator.mapper.AuthenticationMapper;
 import ntg.project.ZakahCalculator.mapper.OtpCodeMapper;
-import ntg.project.ZakahCalculator.mapper.PasswordMapper;
 import ntg.project.ZakahCalculator.mapper.UserMapper;
 import ntg.project.ZakahCalculator.repository.OtpCodeRepository;
 import ntg.project.ZakahCalculator.repository.UserRepository;
@@ -45,7 +44,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserMapper userMapper;
     private final AuthenticationMapper authenticationMapper;
     private final OtpCodeMapper otpCodeMapper;
-    private final PasswordMapper passwordMapper;
 
     @Override
     public AuthenticationResponse login(AuthenticationRequest request) {
@@ -164,7 +162,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 otp.getCode()
         );
 
-        return passwordMapper.toForgotPasswordResponse(user);
+        // استخدام UserMapper بدلاً من PasswordMapper
+        return userMapper.toForgotPasswordResponse(user);
     }
 
     @Override
@@ -208,7 +207,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         userRepository.save(user);
 
-        return passwordMapper.toResetPasswordResponse(user);
+
+        return userMapper.toResetPasswordResponse(user);
     }
 
     private String generateOtp() {

@@ -24,7 +24,7 @@ public class OtpCodeServiceImpl implements OtpCodeService {
 
     @Override
     public Optional<OtpCode> getValidOtp(User user, OtpType type) {
-        return otpCodeRepository.findByUserAndTypeAndUsedFalse(user, type)
+        return otpCodeRepository.findByUserIdAndTypeAndUsedFalse(user.getId(), type)
                 .filter(otp -> otp.getExpiresAt().isAfter(LocalDateTime.now()));
     }
 

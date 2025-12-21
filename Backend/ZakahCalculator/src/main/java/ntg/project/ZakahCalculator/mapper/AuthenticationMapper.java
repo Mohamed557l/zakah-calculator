@@ -2,13 +2,22 @@ package ntg.project.ZakahCalculator.mapper;
 
 import ntg.project.ZakahCalculator.dto.response.AuthenticationResponse;
 import ntg.project.ZakahCalculator.entity.User;
-import org.mapstruct.*;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring", uses = UserMapper.class)
-public interface AuthenticationMapper {
+@Component
+public class AuthenticationMapper {
 
-    @Mapping(target = "accessToken", source = "accessToken")
-    @Mapping(target = "refreshToken", source = "refreshToken")
-    @Mapping(target = "userResponse", source = "user")
-    AuthenticationResponse toResponse(String accessToken, String refreshToken, User user);
+    private final UserMapper userMapper;
+
+    public AuthenticationMapper(UserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
+
+    public AuthenticationResponse toResponse(String accessToken, String refreshToken, User user) {
+        AuthenticationResponse response = new AuthenticationResponse();
+        response.setAccessToken(accessToken);
+        response.setRefreshToken(refreshToken);
+        response.setUserResponse(userMapper.toResponse(user));
+        return response;
+    }
 }

@@ -1,40 +1,90 @@
 package ntg.project.ZakahCalculator.mapper;
 
-<<<<<<< HEAD
 import ntg.project.ZakahCalculator.dto.request.ProfileUpdateRequest;
 import ntg.project.ZakahCalculator.dto.request.RegistrationRequest;
-import ntg.project.ZakahCalculator.dto.response.UserResponse;
+import ntg.project.ZakahCalculator.dto.response.*;
 import ntg.project.ZakahCalculator.entity.User;
-import org.mapstruct.*;
 
-@Mapper(componentModel = "spring")
-public interface UserMapper {
+import org.springframework.stereotype.Component;
+import java.time.LocalDate;
+import java.util.Collections;
+
+@Component
+public class UserMapper {
 
     /* ================= Registration ================= */
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "password", source = "password")
-    @Mapping(target = "email", source = "email")
-    @Mapping(target = "name", expression = "java(request.getFirstName() + \" \" + request.getLastName())")
-    @Mapping(target = "roles", ignore = true)
-    @Mapping(target = "enabled", constant = "false")
-    @Mapping(target = "deleted", constant = "false")
-    User toEntity(RegistrationRequest request);
+    public User toEntity(RegistrationRequest request) {
+        if (request == null) return null;
+        User user = new User();
+        user.setName(request.getFirstName() + " " + request.getLastName());
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
+        user.setRoles(Collections.emptyList());
+        user.setEnabled(false);
+        user.setDeleted(false);
+        return user;
+    }
 
     /* ================= Profile Update ================= */
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "name",
-            expression = "java((request.getFirstName() != null || request.getLastName() != null) ? " +
-                    "(request.getFirstName() != null ? request.getFirstName() : \"\") + \" \" + " +
-                    "(request.getLastName() != null ? request.getLastName() : \"\") : user.getName())")
-    void updateUserFromRequest(ProfileUpdateRequest request, @MappingTarget User user);
+    public void updateUserFromRequest(ProfileUpdateRequest request, User user) {
+        if (request == null || user == null) return;
+        String firstName = request.getFirstName() != null ? request.getFirstName() : "";
+        String lastName = request.getLastName() != null ? request.getLastName() : "";
+        if (!firstName.isEmpty() || !lastName.isEmpty()) {
+            user.setName(firstName + " " + lastName);
+        }
+    }
 
     /* ================= Entity → Response ================= */
-    @Mapping(target = "userId", source = "id")
-    @Mapping(target = "fullName", source = "name")
-    @Mapping(target = "userType",
-            expression = "java(user.getRoles().get(0).getName())")
-    UserResponse toResponse(User user);
-=======
-public interface UserMapper {
->>>>>>> 014a1fd10945a19fe5b84da52a2dd6ccb772e5ba
+    public UserResponse toResponse(User user) {
+        if (user == null) return null;
+        UserResponse response = new UserResponse();
+        response.setUserId(user.getId());
+        response.setFullName(user.getName());
+        response.setEmail(user.getEmail());
+        if (user.getRoles() != null && !user.getRoles().isEmpty()) {
+            response.setUserType(user.getRoles().get(0).getName());
+        }
+        return response;
+    }
+
+    /* ================= Delete Account Response ================= */
+    public DeleteAccountResponse toDeleteAccountResponse(LocalDate deletedAt, LocalDate restoreUntil) {
+        return DeleteAccountResponse.builder()
+                .message("Account deleted successfully")
+                .deletedAt(deletedAt)
+                .restoreUntil(restoreUntil)
+                .build();
+    }
+
+    /* ================= Verify Account Response ================= */
+    public VerifyAccountResponse toVerifyAccountResponse() {
+        return VerifyAccountResponse.builder()
+                .message("Account verified successfully")
+                .build();
+    }
+
+    /* ================= Forgot & Reset Password ================= */
+    public ForgotPasswordResponse toForgotPasswordResponse(User user) {
+        return ForgotPasswordResponse.builder()
+                .email(user.getEmail())
+                .message("Password reset OTP sent successfully")
+                .build();
+    }
+
+    public ResetPasswordResponse toResetPasswordResponse(User user) {
+        return ResetPasswordResponse.builder()
+                .email(user.getEmail())
+                .message("Password reset successfully")
+                .build();
+    }
+
+    /* ================= Refresh Tokens Response ================= */
+    public AuthenticationResponse toAuthenticationResponse(String accessToken, String refreshToken) {
+        return AuthenticationResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .userResponse(null)
+                .build();
+    }
 }
