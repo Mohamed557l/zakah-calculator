@@ -1,1 +1,36 @@
-<p>login works!</p>
+<form class="space-y-4" [formGroup]="loginForm" (ngSubmit)="onLogin()">
+    <div>
+        <label for="email-login" class="font-medium text-slate-700 block mb-1.5">البريد الإلكتروني</label>
+        <input type="email" id="email-login" formControlName="email"
+            class="w-full py-2.5 px-4 bg-white border rounded-lg focus:ring-2 outline-none transition-all"
+            [class.border-red-500]="f['email'].invalid && f['email'].touched"
+            [class.border-slate-300]="!(f['email'].invalid && f['email'].touched)"
+            placeholder="أدخل بريدك الإلكتروني">
+        @if (f['email'].invalid && f['email'].touched) {
+            <p class="text-red-600 text-sm mt-1">الرجاء إدخال بريد صالح.</p>
+        }
+    </div>
+
+    <div>
+        <div class="flex justify-between items-center mb-1.5">
+            <label for="password-login" class="font-medium text-slate-700">كلمة المرور</label>
+            <button routerLink="/forgot-password" type="button" (click)="onForgotPassword()"
+                class="text-sm font-semibold text-emerald-600 hover:underline">هل نسيت؟</button>
+        </div>
+        <div class="relative">
+            <input type="password" id="password-login" formControlName="password"
+                class="w-full py-2.5 px-4 bg-white border rounded-lg focus:ring-2 outline-none transition-all"
+                [class.border-red-500]="f['password'].invalid && f['password'].touched"
+                [class.border-slate-300]="!(f['password'].invalid && f['password'].touched)"
+                placeholder="أدخل كلمة المرور">
+        </div>
+        @if (f['password'].invalid && f['password'].touched) {
+            <p class="text-red-600 text-sm mt-1">كلمة المرور مطلوبة (8 أحرف على الأقل).</p>
+        }
+    </div>
+
+    <button type="submit" [disabled]="isLoading()"
+        class="w-full py-3 px-4 bg-slate-800 text-white font-semibold rounded-lg hover:bg-slate-900 transition-colors disabled:opacity-50">
+        {{ isLoading() ? 'جاري التحميل...' : 'تسجيل الدخول' }}
+    </button>
+</form>

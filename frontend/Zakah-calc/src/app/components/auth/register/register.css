@@ -1,0 +1,14 @@
+button {
+    outline: none !important;
+}
+
+/* تأثير بسيط عند الضغط على الزر */
+button:active {
+    transform: scale(0.98);
+}
+
+/* تحسين شكل حقول الإدخال عند التركيز */
+input:focus {
+    border-color: #10b981; /* emerald-500 */
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}

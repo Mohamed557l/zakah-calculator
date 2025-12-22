@@ -1,1 +1,42 @@
-<p>intro works!</p>
+<div class="p-4 sm:p-8">
+  <div class="max-w-4xl mx-auto">
+    <header class="mb-8 text-center">
+      <h1 class="text-3xl font-bold text-slate-800">أهلاً بك، محمد علي!</h1>
+      <p class="text-slate-500 mt-2 text-lg">لنبدأ في حساب زكاتك بدقة.</p>
+    </header>
+
+    <div class="bg-white rounded-xl shadow-lg p-6 sm:p-8 space-y-6">
+      <h2 class="text-2xl font-semibold text-slate-800 text-center">كيف يعمل: عملية من خطوتين</h2>
+      
+      <div class="flex flex-col md:flex-row gap-6">
+        <!-- Step 1 -->
+        <div class="flex-1 p-6 bg-slate-50 rounded-lg border border-slate-200">
+          <div class="flex items-center gap-4 mb-3">
+            <div class="shrink w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center font-bold text-lg">1</div>
+            <h3 class="text-xl font-bold text-slate-700">حسابك الأول</h3>
+          </div>
+          <p class="text-slate-600">
+            للبدء، ستحتاج إلى تفاصيلك المالية من <strong>أحدث ميزانية عمومية سنوية</strong>. سيرشدك المعالج خلال إدخال أصولك (مثل النقد والذهب والاستثمارات). هذا يحدد خط الأساس لزكاتك.
+          </p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="flex-1 p-6 bg-slate-50 rounded-lg border border-slate-200">
+          <div class="flex items-center gap-4 mb-3">
+            <div class="shrink w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center font-bold text-lg">2</div>
+            <h3 class="text-xl font-bold text-slate-700">السنة التالية</h3>
+          </div>
+          <p class="text-slate-600">
+            بمجرد مرور عام هجري كامل (الحول) منذ حسابك الأول، ستعود لإجراء حسابك التالي. ستستخدم <strong>ميزانيتك العمومية السنوية الجديدة</strong> لحساب الزكاة المستحقة لتلك الفترة. سيحتفظ التطبيق بسجل لك.
+          </p>
+        </div>
+      </div>
+
+      <div class="text-center pt-4">
+          <button routerLink="/wizard" (click)="onStart()" class="px-8 py-3 bg-emerald-600 text-white font-bold rounded-lg shadow-md hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300 transition-all duration-300">
+            ابدأ حسابي الأول
+          </button>
+      </div>
+    </div>
+  </div>
+</div>
