@@ -1,30 +1,177 @@
-<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-4">
-    
-    <div>
-        <label class="font-medium text-slate-700 block mb-1.5">نوع الحساب</label>
-        <div class="grid grid-cols-2 gap-3">
-            <button type="button" (click)="selectPersona('individual')"
-                [class.border-emerald-500]="f['persona'].value === 'individual'"
-                [class.bg-emerald-50]="f['persona'].value === 'individual'"
-                class="flex items-center p-3 border-2 rounded-lg text-start transition-all duration-300 border-slate-200">
-                <div class="ms-3">
-                    <div class="font-bold text-slate-800 text-sm">فرد</div>
-                </div>
+<div class="min-h-screen grid grid-cols-1 md:grid-cols-2">
+    <div class="flex flex-col items-center justify-center p-6 sm:p-20 bg-slate-50">
+        <div class="w-full max-w-md">
+            <h1 class="text-3xl font-bold text-slate-800">أنشئ حسابك</h1>
+            <p class="text-slate-500 mt-2 mb-6">مرحباً بك! الرجاء إدخال بياناتك.</p>
+
+            <button
+                class="w-full flex items-center justify-center gap-2 py-3 px-4 border border-slate-300 rounded-lg hover:bg-slate-100 transition-colors">
+                <span>التسجيل باستخدام جوجل</span>
             </button>
 
-            <button type="button" (click)="selectPersona('company')"
-                [class.border-blue-500]="f['persona'].value === 'company'"
-                [class.bg-blue-50]="f['persona'].value === 'company'"
-                class="flex items-center p-3 border-2 rounded-lg text-start transition-all duration-300 border-slate-200">
-                <div class="ms-3">
-                    <div class="font-bold text-slate-800 text-sm">شركة</div>
+            <div class="flex items-center my-6">
+                <hr class="grow border-slate-300">
+                <span class="mx-4 text-slate-400 text-sm">أو</span>
+                <hr class="grow border-slate-300">
+            </div>
+
+            <form class="space-y-4" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+                <div>
+                    <label for="name" class="font-medium text-slate-700 block mb-1.5">الاسم</label>
+                    <input type="text" id="name" formControlName="name"
+                        class="w-full py-2.5 px-4 bg-white border rounded-lg focus:ring-2 outline-none transition-all"
+                        [class.border-red-500]="f['name'].invalid && f['name'].touched"
+                        [class.border-slate-300]="!(f['name'].invalid && f['name'].touched)" placeholder="أدخل اسمك">
+                    @if (f['name'].invalid && f['name'].touched) {
+                    <p class="text-red-600 text-sm mt-1">الاسم مطلوب.</p>
+                    }
                 </div>
-            </button>
+
+                <div>
+                    <label for="email" class="font-medium text-slate-700 block mb-1.5">البريد الإلكتروني</label>
+                    <input type="email" id="email" formControlName="email"
+                        class="w-full py-2.5 px-4 bg-white border rounded-lg focus:ring-2 outline-none transition-all"
+                        [class.border-red-500]="f['email'].invalid && f['email'].touched"
+                        [class.border-slate-300]="!(f['email'].invalid && f['email'].touched)"
+                        placeholder="أدخل بريدك الإلكتروني">
+                    @if (f['email'].invalid && f['email'].touched) {
+                    <p class="text-red-600 text-sm mt-1">الرجاء إدخال بريد إلكتروني صالح.</p>
+                    }
+                </div>
+
+                <div>
+                    <label for="password" class="font-medium text-slate-700 block mb-1.5">كلمة المرور</label>
+                    <div class="relative">
+                        <input [type]="showPassword() ? 'text' : 'password'" id="password" formControlName="password"
+                            class="w-full py-2.5 px-4 bg-white border rounded-lg focus:ring-2 outline-none transition-all"
+                            [class.border-red-500]="f['password'].invalid && f['password'].touched"
+                            placeholder="أدخل كلمة المرور">
+                        <button type="button" (click)="showPassword.set(!showPassword())"
+                            class="absolute inset-y-0 left-0 px-3 flex items-center text-slate-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </button>
+                    </div>
+                    @if (f['password'].invalid && f['password'].touched) {
+                    <p class="text-red-600 text-sm mt-1">يجب أن تكون كلمة المرور 8 أحرف على الأقل.</p>
+                    }
+                </div>
+
+                <div>
+                    <label for="confirm-password" class="font-medium text-slate-700 block mb-1.5">أعد كتابة كلمة
+                        المرور</label>
+                    <div class="relative">
+                        <input [type]="showConfirmPassword() ? 'text' : 'password'" id="confirm-password"
+                            formControlName="confirmPassword"
+                            class="w-full py-2.5 px-4 bg-white border rounded-lg focus:ring-2 outline-none transition-all"
+                            [class.border-red-500]="registerForm.errors?.['passwordMismatch'] && f['confirmPassword'].touched"
+                            placeholder="أعد كتابة كلمة المرور">
+                        <button type="button" (click)="showConfirmPassword.set(!showConfirmPassword())"
+                            class="absolute inset-y-0 left-0 px-3 flex items-center text-slate-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </button>
+                    </div>
+                    @if (registerForm.errors?.['passwordMismatch'] && f['confirmPassword'].touched) {
+                    <p class="text-red-600 text-sm mt-1">كلمتا المرور غير متطابقتين.</p>
+                    }
+                </div>
+
+                <div>
+                    <label class="font-medium text-slate-700 block mb-1.5">نوع الحساب</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button type="button" (click)="selectPersona('individual')"
+                            class="flex items-center p-3 border-2 rounded-lg text-start transition-all"
+                            [class.border-emerald-500]="f['persona'].value === 'individual'"
+                            [class.bg-emerald-50]="f['persona'].value === 'individual'"
+                            [class.border-slate-300]="f['persona'].value !== 'individual'">
+                            <div
+                                class="shrink-0 w-8 h-8 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                            </div>
+                            <div class="ms-3 font-semibold text-slate-800 text-sm">فرد</div>
+                        </button>
+
+                        <button type="button" (click)="selectPersona('company')"
+                            class="flex items-center p-3 border-2 rounded-lg text-start transition-all"
+                            [class.border-emerald-500]="f['persona'].value === 'company'"
+                            [class.bg-emerald-50]="f['persona'].value === 'company'"
+                            [class.border-slate-300]="f['persona'].value !== 'company'">
+                            <div
+                                class="shrink-0 w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path
+                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                </svg>
+                            </div>
+                            <div class="ms-3 font-semibold text-slate-800 text-sm">شركة</div>
+                        </button>
+                    </div>
+                    @if (f['persona'].invalid && f['persona'].touched) {
+                    <p class="text-red-600 text-sm mt-1">الرجاء اختيار نوع الحساب.</p>
+                    }
+                </div>
+
+                <div class="flex items-center">
+                    <input id="terms" type="checkbox" formControlName="termsAccepted"
+                        class="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                    <label for="terms" class="ms-2 block text-sm text-slate-900">أوافق على جميع الشروط والأحكام.</label>
+                </div>
+                @if (f['termsAccepted'].invalid && f['termsAccepted'].touched) {
+                <p class="text-red-600 text-sm mt-1">يجب عليك قبول الشروط والأحكام.</p>
+                }
+
+                <button routerLink="/verify-otp" type="submit"
+                    class="w-full py-3 px-4 bg-slate-800 text-white font-semibold rounded-lg hover:bg-slate-900 transition-colors">
+                    إنشاء حساب
+                </button>
+            </form>
+            <p class="text-center text-sm text-slate-500 mt-6">
+                هل لديك حساب بالفعل؟
+                <button routerLink="/login" class="font-semibold text-emerald-600 hover:underline">تسجيل الدخول</button>
+            </p>
         </div>
     </div>
 
-    <button type="submit" 
-        class="w-full py-3 px-4 bg-slate-800 text-white font-semibold rounded-lg hover:bg-slate-900 transition-colors">
-        إنشاء حساب
-    </button>
-</form>
+    
+    <div
+        class="hidden md:flex flex-col items-center justify-center p-12 bg-[linear-gradient(90deg,rgba(42,123,155,1)_0%,rgba(43,204,110,1)_37%,rgba(235,235,235,1)_100%)] text-white">
+
+
+        <div class="max-w-md text-center">
+            <img src="/imgs/LogoZakah.png" alt="ZakahCalc Logo" class="h-56 w-auto mx-auto mb-6">
+            <h2 class="text-3xl font-bold tracking-tight">مرحباً بك في حاسبة الزكاة!</h2>
+            <p class="mt-4 text-gray-500">انضم الآن لحساب زكاة سلس ودقيق. أدِ واجباتك بثقة وسهولة.</p>
+
+            <div class="mt-10 p-6 bg-gray-800 rounded-xl shadow-lg">
+                <h3 class="font-semibold text-start">رحلة زكاتك</h3>
+                <div class="mt-4 flex items-end h-32 space-x-2">
+                    <div class="flex-1 bg-gray-700 rounded-t-md animate-pulse"
+                        style="height: 40%; animation-delay: 100ms;"></div>
+                    <div class="flex-1 bg-gray-700 rounded-t-md animate-pulse"
+                        style="height: 60%; animation-delay: 200ms;"></div>
+                    <div class="flex-1 bg-emerald-500 rounded-t-lg" style="height: 85%;"></div>
+                    <div class="flex-1 bg-gray-700 rounded-t-md animate-pulse"
+                        style="height: 50%; animation-delay: 300ms;"></div>
+                    <div class="flex-1 bg-gray-700 rounded-t-md animate-pulse"
+                        style="height: 70%; animation-delay: 400ms;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
