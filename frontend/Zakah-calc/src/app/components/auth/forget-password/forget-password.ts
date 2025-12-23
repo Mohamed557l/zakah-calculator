@@ -1,63 +1,80 @@
-import { Component, signal, output } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from "@angular/router";
-import { AuthService } from '../../../services/auth-service/auth.service'; // استيراد الخدمة
-import { IForgotPassword } from '../../../models/IuserRegistration';
+import { Router, RouterLink } from '@angular/router';
+import { finalize } from 'rxjs';
+import { AuthService } from '../../../services/auth-service/auth.service';
+import { ForgetPasswordRequest } from '../../../models/request/IAuthRequest';
 
 @Component({
   selector: 'app-forget-password',
   standalone: true,
-  imports: [RouterLink, CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './forget-password.html',
   styleUrl: './forget-password.css',
 })
 export class ForgetPassword {
-  // Signals للحالة
+
+  // ===== Signals =====
   email = signal('');
   emailError = signal<string | null>(null);
   requestSent = signal(false);
-  isLoading = signal(false); // لحالة التحميل
+  isLoading = signal(false);
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
+  // ===== Handlers =====
   onEmailChange(event: Event) {
     const value = (event.target as HTMLInputElement).value;
     this.email.set(value);
-    // إزالة الخطأ بمجرد البدء في الكتابة
     if (this.emailError()) this.emailError.set(null);
   }
 
+  // ===== Validation =====
   private validate(): boolean {
-    this.emailError.set(null);
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     if (!this.email()) {
-      this.emailError.set('البريد الإلكتروني مطلوب.');
+      this.emailError.set('البريد الإلكتروني مطلوب');
       return false;
     }
+
     if (!emailRegex.test(this.email())) {
-      this.emailError.set('الرجاء إدخال عنوان بريد إلكتروني صالح.');
+      this.emailError.set('الرجاء إدخال بريد إلكتروني صالح');
       return false;
     }
+
+    this.emailError.set(null);
     return true;
   }
 
+  // ===== Submit =====
   onResetRequest() {
-    if (this.validate()) {
-      this.isLoading.set(true);
-      const data: IForgotPassword = { email: this.email() };
+    if (!this.validate()) return;
 
-      this.authService.forgotPassword(data).subscribe({
-        next: (response) => {
-          console.log('تم إرسال طلب إعادة التعيين:', response);
+    this.isLoading.set(true);
+
+    const data: ForgetPasswordRequest = {
+      email: this.email()
+    };
+
+    this.authService
+      .forgetPassword(data)
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: (res) => {
           this.requestSent.set(true);
+          console.log(res)
+         
+          this.router.navigate(['/verify-otp-pass'], {
+            queryParams: { email: this.email() }
+          });
         },
-        error: (err) => {
-          console.error('خطأ في إرسال الطلب:', err);
-          this.emailError.set('حدث خطأ، تأكد من صحة البريد أو حاول لاحقاً.');
-          this.isLoading.set(false);
-        },
-        complete: () => this.isLoading.set(false)
+        error: () => {
+          this.emailError.set('حدث خطأ، حاول مرة أخرى لاحقاً');
+        }
       });
-    }
   }
 }

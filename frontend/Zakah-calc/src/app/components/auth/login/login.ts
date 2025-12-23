@@ -1,24 +1,22 @@
-import { Component, OnInit, signal, output } from '@angular/core';
-import { RouterLink, Router } from "@angular/router";
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+
 import { AuthService } from '../../../services/auth-service/auth.service';
-import { IuserLogin } from '../../../models/IuserRegistration';
+import { AuthenticationRequest } from '../../../models/request/IAuthRequest';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule, CommonModule],
-  templateUrl: './login.html',
-  styleUrl: './login.css',
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  templateUrl: './login.html'
 })
 export class Login implements OnInit {
-  loginForm!: FormGroup;
-  isLoading = signal(false); // لإظهار حالة التحميل
 
-  loggedIn = output<void>();
-  navigateToRegister = output<void>();
-  forgotPassword = output<void>();
+  loginForm!: FormGroup;
+  isLoading = signal(false);
+  serverError = signal<string | null>(null);
 
   constructor(
     private fb: FormBuilder,
@@ -28,40 +26,57 @@ export class Login implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]]
+      email: [
+        '',
+        [
+          Validators.required,
+          Validators.email
+        ]
+      ],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.maxLength(64)
+        ]
+      ]
     });
   }
 
-  // سهولة الوصول للحقول في HTML
-  get f() { return this.loginForm.controls; }
-
-  onLogin() {
-    if (this.loginForm.valid) {
-      this.isLoading.set(true);
-      const credentials: IuserLogin = this.loginForm.value;
-
-      this.authService.login(credentials).subscribe({
-        next: (response) => {
-          console.log('تم الدخول بنجاح', response);
-          // حفظ التوكن (مثال بسيط)
-          localStorage.setItem('token', response.token);
-          
-          this.loggedIn.emit();
-          this.router.navigate(['/intro']);
-        },
-        error: (err) => {
-          console.error('خطأ في الدخول', err);
-          this.isLoading.set(false);
-          alert('البريد الإلكتروني أو كلمة المرور غير صحيحة');
-        },
-        complete: () => this.isLoading.set(false)
-      });
-    } else {
-      this.loginForm.markAllAsTouched();
-    }
+  get f() {
+    return this.loginForm.controls;
   }
 
-  onNavigateToRegister() { this.navigateToRegister.emit(); }
-  onForgotPassword() { this.forgotPassword.emit(); }
+  onLogin(): void {
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+
+    this.isLoading.set(true);
+    this.serverError.set(null);
+
+    const request: AuthenticationRequest = {
+      email: this.f['email'].value,
+      password: this.f['password'].value
+    };
+
+    this.authService.login(request).subscribe({
+      next: (res) => {
+        console.log(res)
+        // التوكن بيتخزن تلقائي من AuthStorageService
+        this.router.navigate(['/intro']);
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          this.serverError.set('البريد الإلكتروني أو كلمة المرور غير صحيحة');
+        } else {
+          this.serverError.set('حدث خطأ غير متوقع، حاول مرة أخرى');
+        }
+        this.isLoading.set(false);
+      },
+      complete: () => this.isLoading.set(false)
+    });
+  }
 }

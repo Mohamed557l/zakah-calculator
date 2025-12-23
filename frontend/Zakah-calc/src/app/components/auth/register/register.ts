@@ -1,21 +1,22 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+// register.component.ts
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { IuserRegisteration } from '../../../models/IuserRegistration';
+
 import { AuthService } from '../../../services/auth-service/auth.service';
+import { RegistrationRequest } from '../../../models/request/IAuthRequest';
+import { UserType } from '../../../models/enums/UserType';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule,RouterLink],
-  templateUrl: './register.html',
-  styleUrl: './register.css',
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  templateUrl: './register.html'
 })
 export class Register implements OnInit {
+
   registerForm!: FormGroup;
-  showPassword = signal(false);
-  showConfirmPassword = signal(false);
 
   constructor(
     private fb: FormBuilder,
@@ -24,20 +25,17 @@ export class Register implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.initForm();
-  }
-
-  private initForm(): void {
-    this.registerForm = this.fb.group({
-      name: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', [Validators.required]],
-      persona: ['individual', [Validators.required]],
-      termsAccepted: [false, [Validators.requiredTrue]]
-    }, {
-      validators: this.passwordMatchValidator
-    });
+    this.registerForm = this.fb.group(
+      {
+        name: ['', Validators.required],
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(8)]],
+        confirmPassword: ['', Validators.required],
+        persona: ['individual', Validators.required],
+        // termsAccepted: [false, Validators.requiredTrue]
+      },
+      { validators: this.passwordMatchValidator }
+    );
   }
 
   get f() {
@@ -46,31 +44,43 @@ export class Register implements OnInit {
 
   selectPersona(type: 'individual' | 'company') {
     this.registerForm.patchValue({ persona: type });
-    this.registerForm.get('persona')?.markAsTouched();
   }
 
-  private passwordMatchValidator(g: FormGroup) {
-    const password = g.get('password')?.value;
-    const confirmPassword = g.get('confirmPassword')?.value;
-    return password === confirmPassword ? null : { 'passwordMismatch': true };
+  passwordMatchValidator(group: FormGroup) {
+    return group.get('password')?.value === group.get('confirmPassword')?.value
+      ? null
+      : { passwordMismatch: true };
   }
 
   onSubmit() {
-    if (this.registerForm.valid) {
-      const registrationData: IuserRegisteration = this.registerForm.value;
-      
-      this.authService.register(registrationData).subscribe({
-        next: (response) => {
-          console.log('نجح التسجيل:', response);
-          // this.router.navigate(['/verify-otp']);
-        },
-        error: (err) => {
-          console.error('فشل التسجيل:', err);
-          alert('حدث خطأ أثناء إنشاء الحساب، يرجى المحاولة مرة أخرى.');
-        }
-      });
-    } else {
+    if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
+      return;
     }
+
+    const nameParts = this.registerForm.value.name.trim().split(' ');
+
+    const request: RegistrationRequest = {
+      firstName: nameParts[0],
+      lastName: nameParts.slice(1).join(' ') || '',
+      email: this.registerForm.value.email,
+      password: this.registerForm.value.password,
+      confirmPassword: this.registerForm.value.confirmPassword,
+      userType:
+        this.registerForm.value.persona === 'individual'
+          ? UserType.ROLE_INDIVIDUAL
+          : UserType.ROLE_COMPANY
+    };
+
+    this.authService.register(request).subscribe({
+      next: () => {
+        this.router.navigate(['/verify-otp'], {
+          queryParams: { email: request.email }
+        });
+      },
+      error: () => {
+        alert('فشل إنشاء الحساب');
+      }
+    });
   }
 }

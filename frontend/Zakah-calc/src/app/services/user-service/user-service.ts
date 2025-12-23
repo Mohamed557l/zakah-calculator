@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-
-
 import { AuthStorageService } from '../storage-service/StorageService';
 import {ChangePasswordRequest, ProfileUpdateRequest} from '../../models/request/IAuthRequest';
 import {DeleteAccountResponse, ProfileUpdateResponse} from '../../models/response/IAuthResponse';

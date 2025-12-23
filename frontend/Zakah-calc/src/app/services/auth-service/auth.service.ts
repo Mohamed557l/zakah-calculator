@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, tap} from 'rxjs';
 import {
@@ -12,19 +12,20 @@ import {
   AuthenticationRequest,
   ForgetPasswordRequest,
   RefreshRequest,
+  RegistrationRequest,
   ResetPasswordRequest,
   VerifyAccountRequest,
   VerifyOtpRequest
 } from '../../models/request/IAuthRequest';
-import {IuserRegisteration} from '../../models/IuserRegistration';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  // isLoggedIn = signal<boolean>(AuthStorageService.isLoggedIn());
 
-  private readonly BASE_URL = '/api/auth';
+ private readonly BASE_URL = 'http://localhost:8080/auth';
 
   constructor(private http: HttpClient) {}
 
@@ -38,7 +39,7 @@ export class AuthService {
       );
   }
 
-  register(request: IuserRegisteration): Observable<void> {
+  register(request: RegistrationRequest): Observable<void> {
     return this.http.post<void>(`${this.BASE_URL}/register`, request);
   }
 
