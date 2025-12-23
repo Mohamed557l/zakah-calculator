@@ -1,5 +1,6 @@
 import { Component, output } from '@angular/core';
 import { RouterLink } from "@angular/router";
+import { AuthStorageService } from '../../services/storage-service/StorageService';
 
 @Component({
   selector: 'app-intro',
@@ -9,6 +10,7 @@ import { RouterLink } from "@angular/router";
 })
 export class Intro {
 startCalculation = output<void>();
+name = AuthStorageService.getUserFullName();
 
   onStart() {
     this.startCalculation.emit();

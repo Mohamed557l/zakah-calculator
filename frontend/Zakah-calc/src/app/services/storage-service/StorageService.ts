@@ -20,35 +20,51 @@ export class AuthStorageService {
     localStorage.setItem(USER, JSON.stringify(auth.userResponse));
   }
 
+  private static isBrowser(): boolean {
+  return typeof window !== 'undefined';
+}
+
   static getAccessToken(): string | null {
+      if (!this.isBrowser()) return null;
     return localStorage.getItem(ACCESS_TOKEN_KEY);
   }
 
   static getRefreshToken(): string | null {
+    if (!this.isBrowser()) return null;
     return localStorage.getItem(REFRESH_TOKEN_KEY);
   }
 
   static hasAccessToken(): boolean {
+    
     return !!this.getAccessToken();
   }
 
   /* ================= USER ================= */
 
   static saveUser(user: UserResponse): void {
+    
     localStorage.setItem(USER, JSON.stringify(user));
   }
 
   static getUser(): UserResponse | null {
+    if (!this.isBrowser()) return null;
     const raw = localStorage.getItem(USER);
     return raw ? (JSON.parse(raw) as UserResponse) : null;
   }
 
   static getUserId(): number | null {
+    if (!this.isBrowser()) return null;
     return this.getUser()?.userId ?? null;
   }
 
   static getUserType(): UserType | null {
+    if (!this.isBrowser()) return null;
     return this.getUser()?.userType ?? null;
+  }
+
+  static getUserFullName(): string | null {
+    if (!this.isBrowser()) return null;
+    return this.getUser()?.fullName ?? null;
   }
 
   /* ================= ROLE HELPERS ================= */

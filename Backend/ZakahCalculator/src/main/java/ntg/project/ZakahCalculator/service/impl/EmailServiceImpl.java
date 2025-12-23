@@ -47,8 +47,10 @@ public class EmailServiceImpl implements EmailService {
             Context context = new Context();
             context.setVariables(properties);
 
-            ClassPathResource logoImage = new ClassPathResource("static/images/ntg-logo.png");
-            helper.addInline("logoImage", logoImage);
+            ClassPathResource ntgLogo = new ClassPathResource("static/images/ntg.png");
+            ClassPathResource zakahLogo = new ClassPathResource("static/images/zakahlogo.png");
+            helper.addInline("ntg_logo", ntgLogo);
+            helper.addInline("zakah_logo", zakahLogo);
 
             helper.setFrom("madel25810@gmail.com");
             helper.setTo(to);
@@ -63,4 +65,3 @@ public class EmailServiceImpl implements EmailService {
         }
     }
 }
-
