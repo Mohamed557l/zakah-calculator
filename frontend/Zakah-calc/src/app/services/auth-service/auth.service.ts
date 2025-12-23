@@ -1,13 +1,13 @@
-import {Injectable, signal} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable, tap} from 'rxjs';
+import { DoCheck, Injectable, OnInit, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
 import {
   AuthenticationResponse,
   ForgetPasswordResponse,
   ResetPasswordResponse,
   VerifyOtpResponse
 } from '../../models/response/IAuthResponse';
-import {AuthStorageService} from '../storage-service/StorageService';
+import { AuthStorageService } from '../storage-service/StorageService';
 import {
   AuthenticationRequest,
   ForgetPasswordRequest,
@@ -22,20 +22,28 @@ import {
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
-  // isLoggedIn = signal<boolean>(AuthStorageService.isLoggedIn());
+export class AuthService implements OnInit{
 
- private readonly BASE_URL = 'http://localhost:8080/auth';
+  private readonly BASE_URL = 'http://localhost:8080/auth';
 
-  constructor(private http: HttpClient) {}
 
+  isLoggedIn = signal<boolean>(false);
+
+  constructor(private http: HttpClient) {
+this.isLoggedIn.set(!!AuthStorageService.getAccessToken());
+  }
+  ngOnInit(): void {
+  }
   /* ================= AUTH ================= */
 
   login(request: AuthenticationRequest): Observable<AuthenticationResponse> {
     return this.http
       .post<AuthenticationResponse>(`${this.BASE_URL}/login`, request)
       .pipe(
-        tap(res => AuthStorageService.saveTokens(res))
+        tap(res =>{ AuthStorageService.saveTokens(res)
+          this.isLoggedIn.set(true);
+        })
+      
       );
   }
 
@@ -47,7 +55,7 @@ export class AuthService {
     request: VerifyAccountRequest
   ): Observable<AuthenticationResponse> {
     return this.http
-      .post<AuthenticationResponse>(`${this.BASE_URL}/verify-acount`, request)
+      .post<AuthenticationResponse>(`${this.BASE_URL}/verify`, request)
       .pipe(
         tap(res => AuthStorageService.saveTokens(res))
       );
@@ -99,5 +107,6 @@ export class AuthService {
 
   logout(): void {
     AuthStorageService.clear();
+    this.isLoggedIn.set(false);
   }
 }

@@ -2,6 +2,7 @@ import { Component, signal, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthStorageService } from '../../services/storage-service/StorageService';
 import { AuthService } from '../../services/auth-service/auth.service';
+import { UserResponse } from '../../models/response/IAuthResponse';
 
 @Component({
   selector: 'app-navbar',
@@ -12,10 +13,12 @@ import { AuthService } from '../../services/auth-service/auth.service';
 export class Navbar {
   private router = inject(Router);
   private readonly _AuthService = inject(AuthService)
-  isLogin = signal(true)
-  
+  name = AuthStorageService.getUserFullName();
+  type = AuthStorageService.getUserType();
+  //  : UserResponse
   
   isProfileMenuOpen = signal(false);
+
 
   toggleProfileMenu() {
     this.isProfileMenuOpen.update(v => !v);
@@ -26,11 +29,8 @@ export class Navbar {
 
   logout() {
     AuthStorageService.clear();
-
-    this.isLogin.set(false);
+    this._AuthService.logout();
     this.isProfileMenuOpen.set(false);
-
-  
     this.router.navigate(['/']);
   }
 }
