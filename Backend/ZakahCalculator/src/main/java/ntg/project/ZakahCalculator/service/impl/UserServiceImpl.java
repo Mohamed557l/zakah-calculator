@@ -11,6 +11,7 @@ import ntg.project.ZakahCalculator.exception.ErrorCode;
 import ntg.project.ZakahCalculator.mapper.UserMapper;
 import ntg.project.ZakahCalculator.repository.UserRepository;
 import ntg.project.ZakahCalculator.service.UserService;
+import ntg.project.ZakahCalculator.uitility.UserIDUtility;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    private final UserIDUtility userIDUtility;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
@@ -35,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changePassword(ChangePasswordRequest request) {
-        Long userId = getUserId();
+        Long userId = userIDUtility.getAuthenticatedUserId();
         if (!request.getNewPassword().equals(request.getConfirmNewPassword())) {
             throw new BusinessException(ErrorCode.PASSWORD_MISMATCH);
         }
@@ -52,10 +54,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ProfileUpdateResponse updateProfileInfo(ProfileUpdateRequest request) {
-        Long userId = getUserId();
+        Long userId = userIDUtility.getAuthenticatedUserId();
         User user = findById(userId);
         userMapper.updateUserFromRequest(request, user);
-        User updatedUser =userRepository.save(user);
+        User updatedUser = userRepository.save(user);
         return userMapper.userToProfileUpdateResponse(updatedUser);
     }
 
@@ -67,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public DeleteAccountResponse softDeleteUser() {
-        Long userId = getUserId();
+        Long userId = userIDUtility.getAuthenticatedUserId();
         User user = findById(userId);
 
         if (user.isDeleted()) {
@@ -89,7 +91,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void restoreUser() {
-        Long userId = getUserId();
+        Long userId = userIDUtility.getAuthenticatedUserId();
         User user = findById(userId);
 
         if (!user.isDeleted()) {
@@ -101,10 +103,4 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    private Long getUserId(){
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmailIgnoreCase(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
-        return user.getId();
-    }
 }

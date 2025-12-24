@@ -1,52 +1,48 @@
-package ntg.project.ZakahCalculator.entity;
+package ntg.project.ZakahCalculator.dto.request;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "zakah_company_records")
-@DiscriminatorValue("COMPANY")
-@PrimaryKeyJoinColumn(name = "record_id")
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
 @Setter
-public class ZakahCompanyRecord extends ZakahRecord {
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ZakahCompanyRecordRequest {
 
-
-    //Assets
-    @Column(name = "cash_equivalents", precision = 15, scale = 2)
+    @NotBlank(message = "This field can't be Empty")
     private BigDecimal cashEquivalents;
 
-    @Column(name = "accounts_receivable", precision = 15, scale = 2)
+    @NotBlank(message = "This field can't be Empty")
     private BigDecimal accountsReceivable;
 
-    @Column(precision = 15, scale = 2)
+    @NotBlank(message = "This field can't be Empty")
     private BigDecimal inventory;
 
-    @Column(precision = 15, scale = 2)
+    @NotBlank(message = "This field can't be Empty")
     private BigDecimal investment;
-
-    //Liabilities
-    @Column(name = "accounts_payable", precision = 15, scale = 2)
+    @NotBlank(message = "This field can't be Empty")
     private BigDecimal accountsPayable;
-
-    @Column(name = "short_term_liability", precision = 15, scale = 2)
+    @NotBlank(message = "This field can't be Empty")
     private BigDecimal shortTermLiability;
-
-    @Column(name="accrued_expenses",precision = 15, scale = 2)
+    @NotBlank(message = "This field can't be Empty")
     private BigDecimal accruedExpenses;
-
-    //yearly_portion_of_long_term_liabilities
-    @Column(name="yearly_long_term_liabilities",precision = 15, scale = 2)
+    @NotBlank(message = "This field can't be Empty")
     private BigDecimal yearly_long_term_liabilities;
 
-    //Balance sheet Data
-    @Column(name="balance_sheet_date")
+    @NotBlank(message = "This field can't be Empty")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate balance_sheet_date;
+
+    @NotBlank(message = "This field can't be Empty")
+    private BigDecimal goldPrice;
+
+    @NotBlank(message = "This field can't be Empty")
+    private Long userId;
 
     public BigDecimal getCashEquivalents() {
         return cashEquivalents;
@@ -72,20 +68,20 @@ public class ZakahCompanyRecord extends ZakahRecord {
         this.inventory = inventory;
     }
 
-    public BigDecimal getInvestment() {
-        return investment;
-    }
-
-    public void setInvestment(BigDecimal investment) {
-        this.investment = investment;
-    }
-
     public BigDecimal getAccountsPayable() {
         return accountsPayable;
     }
 
     public void setAccountsPayable(BigDecimal accountsPayable) {
         this.accountsPayable = accountsPayable;
+    }
+
+    public BigDecimal getInvestment() {
+        return investment;
+    }
+
+    public void setInvestment(BigDecimal investment) {
+        this.investment = investment;
     }
 
     public BigDecimal getShortTermLiability() {
@@ -118,5 +114,21 @@ public class ZakahCompanyRecord extends ZakahRecord {
 
     public void setBalance_sheet_date(LocalDate balance_sheet_date) {
         this.balance_sheet_date = balance_sheet_date;
+    }
+
+    public BigDecimal getGoldPrice() {
+        return goldPrice;
+    }
+
+    public void setGoldPrice(BigDecimal goldPrice) {
+        this.goldPrice = goldPrice;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }
