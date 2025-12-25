@@ -16,7 +16,7 @@ export class Navbar {
   name = AuthStorageService.getUserFullName();
   type = AuthStorageService.getUserType();
   //  : UserResponse
-  
+
   isProfileMenuOpen = signal(false);
 
 
