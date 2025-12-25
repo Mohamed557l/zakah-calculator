@@ -1,11 +1,9 @@
-// src/app/core/services/storage-service/auth-storage.service.ts
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import * as CryptoJS from 'crypto-js';
 
 import {UserType} from '../../models/enums/UserType';
 import {AuthenticationResponse, UserResponse} from '../../models/response/IAuthResponse';
 
-// Keys الأصلية (بدون تشفير)
 const ACCESS_TOKEN_KEY = 'access_token';
 const REFRESH_TOKEN_KEY = 'refresh_token';
 const USER_KEY = 'auth_user';
@@ -14,11 +12,8 @@ const USER_KEY = 'auth_user';
   providedIn: 'root'
 })
 export class AuthStorageService {
-
-  // مفتاح التشفير
   private static readonly ENCRYPTION_KEY = 'my-secret-key-1234567890123456';
 
-  // دالة لتشفير النصوص
   private static encrypt(data: string): string {
     if (!data) return '';
     try {
@@ -29,7 +24,6 @@ export class AuthStorageService {
     }
   }
 
-  // دالة لفك تشفير النصوص
   private static decrypt(encryptedData: string): string {
     if (!encryptedData) return '';
     try {
@@ -42,15 +36,13 @@ export class AuthStorageService {
     }
   }
 
-  // دالة لتشفير الـ Key (سيكون ثابت لكل key)
+  // Encrypt
   private static encryptKey(key: string): string {
-    // نستخدم hash بسيط للـ key عشان يبقى ثابت
     return CryptoJS.SHA256(key + this.ENCRYPTION_KEY).toString();
   }
 
-  // دالة لفك تشفير الـ Key (نحتاجها للقراءة)
+  // getEncryptedKey
   private static getEncryptedKey(originalKey: string): string {
-    // نفس التشفير عشان نعرف الـ key المشفر
     return this.encryptKey(originalKey);
   }
 
@@ -58,17 +50,14 @@ export class AuthStorageService {
 
   static saveTokens(auth: AuthenticationResponse): void {
     try {
-      // تشفير الـ keys والـ values
       const encryptedAccessKey = this.getEncryptedKey(ACCESS_TOKEN_KEY);
       const encryptedRefreshKey = this.getEncryptedKey(REFRESH_TOKEN_KEY);
       const encryptedUserKey = this.getEncryptedKey(USER_KEY);
 
-      // تشفير الـ values
       const encryptedAccessToken = this.encrypt(auth.accessToken);
       const encryptedRefreshToken = this.encrypt(auth.refreshToken);
       const encryptedUser = this.encrypt(JSON.stringify(auth.userResponse));
 
-      // الحفظ بالـ keys المشفرة
       localStorage.setItem(encryptedAccessKey, encryptedAccessToken);
       localStorage.setItem(encryptedRefreshKey, encryptedRefreshToken);
       localStorage.setItem(encryptedUserKey, encryptedUser);
@@ -84,7 +73,6 @@ export class AuthStorageService {
   static getAccessToken(): string | null {
     if (!this.isBrowser()) return null;
 
-    // نحصل على الـ key المشفر
     const encryptedKey = this.getEncryptedKey(ACCESS_TOKEN_KEY);
     const encrypted = localStorage.getItem(encryptedKey);
 
@@ -167,7 +155,6 @@ export class AuthStorageService {
 
   static clear(): void {
     try {
-      // نحذف باستخدام الـ keys المشفرة
       const encryptedAccessKey = this.getEncryptedKey(ACCESS_TOKEN_KEY);
       const encryptedRefreshKey = this.getEncryptedKey(REFRESH_TOKEN_KEY);
       const encryptedUserKey = this.getEncryptedKey(USER_KEY);
@@ -176,7 +163,6 @@ export class AuthStorageService {
       localStorage.removeItem(encryptedRefreshKey);
       localStorage.removeItem(encryptedUserKey);
 
-      // نحذف أي بيانات قديمة (بدون تشفير) لو موجودة
       localStorage.removeItem(ACCESS_TOKEN_KEY);
       localStorage.removeItem(REFRESH_TOKEN_KEY);
       localStorage.removeItem(USER_KEY);
@@ -187,16 +173,13 @@ export class AuthStorageService {
 
   /* ================= MIGRATION HELPER ================= */
 
-  // دالة لترقية البيانات القديمة (تشغيل مرة واحدة)
   static migrateOldData(): void {
     if (!this.isBrowser()) return;
 
-    // البيانات القديمة (بدون تشفير)
     const oldAccessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
     const oldRefreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
     const oldUser = localStorage.getItem(USER_KEY);
 
-    // إذا كان فيه بيانات قديمة، نقلها للتشفير
     if (oldAccessToken || oldRefreshToken || oldUser) {
       console.log('Migrating old data to encrypted format...');
 
@@ -214,12 +197,10 @@ export class AuthStorageService {
 
       if (oldUser) {
         const encryptedKey = this.getEncryptedKey(USER_KEY);
-        // إذا كانت البيانات القديمة مشفرة بالفعل، نخليها زي ما هي
         try {
-          JSON.parse(oldUser); // تحقق إذا كانت JSON
+          JSON.parse(oldUser);
           localStorage.setItem(encryptedKey, this.encrypt(oldUser));
         } catch {
-          // لو كانت مشفرة بالفعل
           localStorage.setItem(encryptedKey, oldUser);
         }
         localStorage.removeItem(USER_KEY);

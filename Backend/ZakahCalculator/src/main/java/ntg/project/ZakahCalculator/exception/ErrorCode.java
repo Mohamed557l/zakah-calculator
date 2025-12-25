@@ -37,7 +37,7 @@ public enum ErrorCode {
     EMPTY_FEED_FOR_USER("EMPTY_FEED_FOR_USER", "Follow Friends To see their Posts", NOT_FOUND),
     IMAGE_TYPE_NOT_SUPPORTED("IMAGE_TYPE_NOT_SUPPORTED", "Image type not supported. Allowed types: JPG, JPEG, PNG, BMP, WEBP, SVG", BAD_REQUEST),
     ROLE_NOT_FOUND("ROLE_NOT_FOUND","role not found",NOT_FOUND),
-    ACCOUNT_NOT_VERIFIED("ACCOUNT_NOT_VERIFIED","account not verified",FORBIDDEN);
+    ACCOUNT_NOT_VERIFIED("ACCOUNT_NOT_VERIFIED","account not verified",CONFLICT);
     private final String code;
     private final String defaultMessage;
     private final HttpStatus status;

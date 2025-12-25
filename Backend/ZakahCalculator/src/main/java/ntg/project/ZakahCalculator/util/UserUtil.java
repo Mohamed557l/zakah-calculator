@@ -1,4 +1,4 @@
-package ntg.project.ZakahCalculator.uitility;
+package ntg.project.ZakahCalculator.util;
 
 import lombok.RequiredArgsConstructor;
 import ntg.project.ZakahCalculator.entity.User;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class UserIDUtility {
+public class UserUtil {
     private final UserRepository userRepository;
 
     public Long getAuthenticatedUserId() {

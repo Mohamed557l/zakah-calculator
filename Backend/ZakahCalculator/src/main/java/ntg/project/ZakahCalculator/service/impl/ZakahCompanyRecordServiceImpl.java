@@ -4,7 +4,7 @@ import ntg.project.ZakahCalculator.entity.ZakahCompanyRecord;
 import ntg.project.ZakahCalculator.repository.ZakahCompanyRecordRepository;
 import ntg.project.ZakahCalculator.service.ZakahCompanyRecordService;
 import lombok.RequiredArgsConstructor;
-import ntg.project.ZakahCalculator.uitility.UserIDUtility;
+import ntg.project.ZakahCalculator.util.UserUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +16,7 @@ import java.util.List;
 public class ZakahCompanyRecordServiceImpl
         implements ZakahCompanyRecordService {
 
-    private final UserIDUtility userIDUtility;
+    private final UserUtil userIDUtility;
     private final ZakahCompanyRecordRepository zakahCompanyRecordRepository;
 
     @Override

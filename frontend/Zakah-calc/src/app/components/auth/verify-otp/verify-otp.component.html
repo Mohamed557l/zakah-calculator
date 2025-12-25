@@ -39,7 +39,7 @@
             (click)="resendOtp()"
           >
             إعادة إرسال الرمز
-            <span *ngIf="resendDisabled">({{ resendCounter }})</span>
+            <span *ngIf="resendDisabled">({{ resendCounter$ | async }})</span>
           </button>
         </div>
       </form>

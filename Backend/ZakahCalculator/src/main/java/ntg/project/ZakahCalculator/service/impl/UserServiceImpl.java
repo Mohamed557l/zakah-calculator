@@ -11,8 +11,7 @@ import ntg.project.ZakahCalculator.exception.ErrorCode;
 import ntg.project.ZakahCalculator.mapper.UserMapper;
 import ntg.project.ZakahCalculator.repository.UserRepository;
 import ntg.project.ZakahCalculator.service.UserService;
-import ntg.project.ZakahCalculator.uitility.UserIDUtility;
-import org.springframework.security.core.context.SecurityContextHolder;
+import ntg.project.ZakahCalculator.util.UserUtil;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserIDUtility userIDUtility;
+    private final UserUtil userIDUtility;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;

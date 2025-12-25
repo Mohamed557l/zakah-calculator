@@ -4,19 +4,26 @@ import { catchError, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
-  const injector = inject(Injector); // ⬅️ جيب Injector
-
-  // Don't inject ToastrService here directly
-  // const toastr = inject(ToastrService); // ❌ مش هنا
+  const injector = inject(Injector);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      // جيب ToastrService داخل الـ catchError
-      const toastr = injector.get(ToastrService); // ✅ هنا
+      const toastr = injector.get(ToastrService);
 
-      let userMessage = 'حدث خطأ غير معروف، يرجى المحاولة لاحقًا.';
+      // 🔹 حالة 409 - دع الـ component يتعامل معها (خصوصاً لحساب غير مفعل)
+      if (error.status.toString().includes('409')) {
+        console.log('Interceptor: حالة 409 - ترك component يتعامل معها');
+        return throwError(() => error);
+      }
 
-      // Validation Errors من الـ backend
+      // 🔹 حالة 401 - بيانات تسجيل دخول غير صحيحة
+      if (error.status === 401) {
+        console.log('Interceptor: حالة 401 - بيانات تسجيل دخول غير صحيحة');
+        toastr.error('البريد الإلكتروني أو كلمة المرور غير صحيحة', 'خطأ في تسجيل الدخول');
+        return throwError(() => error);
+      }
+
+      // 🔹 Validation errors (400)
       if (error.status === 400 && error.error?.validationErrors?.length) {
         const messages = error.error.validationErrors.map((ve: any) => {
           switch (ve.code) {
@@ -46,8 +53,6 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
               return 'الرجاء إدخال كلمة المرور الحالية.';
             case 'VALIDATION.REGISTRATION.PASSWORD.SIZE':
               return 'كلمة المرور يجب أن تكون بين 8 و 50 حرفاً.';
-            case 'VALIDATION.REGISTRATION.CONFIRM_PASSWORD.NOT_BLANK':
-              return 'الرجاء إدخال تأكيد كلمة المرور.';
             case 'VALIDATION.RESET_PASSWORD.PASSWORD.NOT_BLANK':
               return 'الرجاء إدخال كلمة المرور الجديدة.';
             case 'VALIDATION.RESET_PASSWORD.PASSWORD.WEAK':
@@ -60,41 +65,58 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         });
 
         toastr.error(messages.join('<br>'), 'أخطاء في الإدخال', {
-          enableHtml: true
+          enableHtml: true,
+          timeOut: 5000
         });
-        userMessage = 'الرجاء تصحيح الأخطاء في النموذج.';
+        return throwError(() => error);
       }
 
-      // Errors عامة من الباك اند
-      else if (error.error?.message) {
+      // 🔹 Handle other errors with specific messages
+      if (error.error?.message) {
+        let userMessage = error.error.message;
+        let title = 'خطأ';
+
         switch (error.status) {
-          case 401:
-            userMessage = 'بيانات الدخول غير صحيحة.';
-            break;
           case 403:
             userMessage = 'ليس لديك صلاحية للوصول لهذا المورد.';
+            title = 'صلاحية غير كافية';
             break;
           case 404:
             userMessage = 'المورد المطلوب غير موجود.';
-            break;
-          case 409:
-            userMessage = 'المورد موجود بالفعل.';
+            title = 'غير موجود';
             break;
           case 500:
             userMessage = 'حدث خطأ في الخادم، يرجى المحاولة لاحقًا.';
+            title = 'خطأ في الخادم';
             break;
           default:
-            userMessage = error.error.message;
+            if (error.status) {
+              title = `خطأ ${error.status}`;
+            }
         }
-        toastr.error(userMessage, `خطأ ${error.status}`);
+
+        toastr.error(userMessage, title, {
+          timeOut: 4000
+        });
+        return throwError(() => error);
       }
 
-      // Default error
-      else {
-        toastr.error(userMessage, `خطأ ${error.status}`);
-      }
+      // 🔹 Default fallback for unknown errors
+      toastr.error(
+        'حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى لاحقاً.',
+        'خطأ غير معروف',
+        { timeOut: 4000 }
+      );
 
-      console.error('HTTP Error:', error);
+      console.error('HTTP Error Details:', {
+        status: error.status,
+        statusText: error.statusText,
+        url: req.url,
+        method: req.method,
+        error: error.error,
+        headers: req.headers
+      });
+
       return throwError(() => error);
     })
   );

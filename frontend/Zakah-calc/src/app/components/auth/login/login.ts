@@ -70,17 +70,13 @@ export class Login implements OnInit {
       error: (err) => {
         if (err.status === 401) {
           this.serverError.set('البريد الإلكتروني أو كلمة المرور غير صحيحة');
-        }else if (err.status === 403){
+        }else if (err.status === 409){
+          console.log("409" + err)
           this.router.navigate(['/verify-otp'], {
             queryParams: { email: request.email }
           });
-        }
-        // else if (err.messages === 403){
-        //   this.router.navigate(['/verify-otp'], {
-        //     queryParams: { email: request.email }
-        //   });
-        // }
-        else {
+        }else {
+          console.log("check here")
           this.serverError.set('حدث خطأ غير متوقع، حاول مرة أخرى');
         }
         this.isLoading.set(false);

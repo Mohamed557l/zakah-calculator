@@ -92,7 +92,7 @@ public class OtpServiceImpl implements OtpService {
                 otp.getCode()
         );
 
-        log.info("OTP sent to {} for {}", user.getEmail(), otp.getType());
+        log.info("OTP re-sent to {} for {}", user.getEmail(), otp.getType());
     }
 
     private String generateOtp() {
