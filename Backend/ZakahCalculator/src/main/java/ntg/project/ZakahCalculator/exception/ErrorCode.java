@@ -47,7 +47,8 @@ public enum ErrorCode {
     INVALID_BALANCE_SHEET_DATE("INVALID_BALANCE_SHEET_DATE", "Invalid balance sheet date: %s", BAD_REQUEST),
     NEGATIVE_ZAKAH_POOL("NEGATIVE_ZAKAH_POOL", "Zakah pool cannot be negative. Your liabilities exceed your assets", BAD_REQUEST),
     GOLD_PRICE_INVALID("GOLD_PRICE_INVALID", "Gold price must be greater than zero", BAD_REQUEST),
-    BALANCE_SHEET_DATE_BEFORE_LAST_RECORD("BALANCE_SHEET_DATE_BEFORE_LAST_RECORD", "Balance sheet date cannot be before your last record date: %s", BAD_REQUEST);
+    BALANCE_SHEET_DATE_BEFORE_LAST_RECORD("BALANCE_SHEET_DATE_BEFORE_LAST_RECORD", "Balance sheet date cannot be before your last record date: %s", BAD_REQUEST)
+    , OTP_TOKEN_EXPIRED("OTP_TOKEN_EXPIRED","" ,FORBIDDEN );
     private final String code;
     private final String defaultMessage;
     private final HttpStatus status;

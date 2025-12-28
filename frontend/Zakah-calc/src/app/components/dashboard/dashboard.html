@@ -1,1 +1,145 @@
-<p>dashboard works!</p>
+<div class="p-4 sm:p-20">
+  <div class="max-w-7xl mx-auto">
+    <header class="flex flex-col sm:flex-row justify-between sm:items-center mb-8 gap-4">
+      <h1 class="text-3xl font-bold text-slate-800">لوحة التحكم الاستراتيجية</h1>
+      <div class="flex items-center gap-4">
+        <button (click)="onStartNew()" class="px-4 py-2 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition-colors">
+          حساب جديد
+        </button>
+      </div>
+    </header>
+
+    @if (zakahService.latestResult(); as latestResult) {
+      <!-- KPI Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 animate-fade-in">
+        <div class="bg-white rounded-xl shadow p-5">
+          <p class="text-sm font-medium text-slate-500">الزكاة المستحقة (الأخيرة)</p>
+          <p class="mt-1 text-3xl font-semibold tracking-tight text-emerald-600">{{ latestResult.zakahDue | currency:'USD' }}</p>
+        </div>
+         <div class="bg-white rounded-xl shadow p-5">
+          <p class="text-sm font-medium text-slate-500">الوعاء الزكوي (الأخير)</p>
+          <p class="mt-1 text-3xl font-semibold tracking-tight text-slate-800">{{ latestResult.zakatableAmount | currency:'USD' }}</p>
+        </div>
+        <div class="bg-white rounded-xl shadow p-5">
+          <p class="text-sm font-medium text-slate-500">إجمالي الأصول (الأخيرة)</p>
+          <p class="mt-1 text-3xl font-semibold tracking-tight text-slate-800">{{ latestResult.totalAssets | currency:'USD' }}</p>
+        </div>
+        <div class="bg-white rounded-xl shadow p-5">
+          <p class="text-sm font-medium text-slate-500">متوسط الزكاة التاريخي</p>
+          <p class="mt-1 text-3xl font-semibold tracking-tight text-slate-800">{{ zakahService.historicalAverage() | currency:'USD' }}</p>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Main Content Column -->
+        <div class="lg:col-span-2 space-y-8 animate-fade-in">
+
+          @if (zakahService.viewingResult(); as result) {
+            <!-- Viewing Status -->
+            <div class="p-4 rounded-xl" [class.bg-blue-100]="isViewingHistory()" [class.border-blue-200]="isViewingHistory()">
+              @if (isViewingHistory()) {
+                <div class="flex items-center justify-between">
+                  <p class="text-sm font-semibold text-blue-800">
+                    تعرض سجلاً تاريخياً من {{ result.calculationDate | date:'medium' }}
+                  </p>
+                  <button (click)="onViewLatest()" class="text-sm font-medium text-blue-700 hover:underline">عرض الأحدث</button>
+                </div>
+              } @else {
+                <h2 class="text-xl font-bold text-slate-800">تفاصيل الحساب الأخير</h2>
+              }
+            </div>
+
+            <!-- Zakah Status Card -->
+            @if (result.zakahDue > 0) {
+              <div class="bg-white rounded-xl shadow-lg p-6 sm:p-8">
+                <h3 class="text-lg font-semibold text-slate-600">الزكاة المستحقة</h3>
+                <p class="text-5xl font-extrabold text-emerald-600 tracking-tight">{{ result.zakahDue | currency:'USD' }}</p>
+                <p class="text-slate-500 mt-1">لتاريخ الميزانية: {{ result.formData.balanceSheetDate | date }}</p>
+                <hr class="my-6">
+                <h3 class="font-bold text-slate-800 mb-3">المقاييس الرئيسية</h3>
+                <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-sm">
+                  <div><dt class="text-slate-500">إجمالي الأصول</dt><dd class="font-medium text-slate-800 text-base">{{ result.totalAssets | currency:'USD' }}</dd></div>
+                  <div><dt class="text-slate-500">الخصوم القابلة للخصم</dt><dd class="font-medium text-slate-800 text-base">({{ result.totalLiabilities | currency:'USD' }})</dd></div>
+                  <div class="pt-2 border-t mt-2 sm:col-span-2"><dt class="text-slate-500">الوعاء الزكوي</dt><dd class="font-bold text-slate-900 text-lg">{{ result.zakatableAmount | currency:'USD' }}</dd></div>
+                  <div><dt class="text-slate-500">حد النصاب</dt><dd class="font-medium text-slate-800 text-base">{{ result.nisabThreshold | currency:'USD' }}</dd></div>
+                </dl>
+                <button (click)="markAsPaid(result)" class="mt-8 w-full sm:w-auto px-5 py-2.5 text-sm font-medium text-white bg-slate-700 rounded-lg hover:bg-slate-800 focus:ring-4 focus:outline-none focus:ring-slate-300">
+                  تحديد كمدفوع
+                </button>
+              </div>
+            } @else {
+              <div class="bg-white rounded-xl shadow-lg text-center p-8">
+                <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <p class="text-3xl font-bold text-green-700">الزكاة غير مستحقة</p>
+                @if (!result.nisabMet) {
+                    <p class="text-slate-500 mt-2">وعاؤك الزكوي البالغ <span class="font-semibold">{{ result.zakatableAmount | currency:'USD' }}</span> أقل من حد النصاب.</p>
+                } @else {
+                    <p class="text-slate-500 mt-2">وعاؤك الزكوي هو صفر أو أقل.</p>
+                }
+              </div>
+            }
+
+            <!-- Calculation Breakdown Card -->
+            <div class="bg-white rounded-xl shadow-lg">
+              <h3 class="p-4 sm:p-6 text-lg font-semibold text-slate-800 border-b border-slate-200">تفاصيل الحساب</h3>
+              <dl class="text-sm">
+                <dt class="p-4 sm:p-6 font-semibold text-emerald-800 bg-emerald-50 border-b border-t border-emerald-100">الأصول</dt>
+                @if(result.formData.cash > 0) { <dd class="flex justify-between items-center p-4 sm:px-6"><span class="text-slate-600">النقد والأرصدة البنكية</span><span class="font-medium text-slate-800">{{ result.formData.cash | currency:'USD' }}</span></dd> }
+                <!-- @if(result.formData.persona === 'individual') { <dd class="flex justify-between items-center p-4 sm:px-6 border-t border-slate-100"><span class="text-slate-600">قيمة الذهب</span><span class="font-medium text-slate-800">{{ result.formData.goldValue | currency:'USD' }}</span></dd> } -->
+                @if(result.formData.stocks > 0) { <dd class="flex justify-between items-center p-4 sm:px-6 border-t border-slate-100"><span class="text-slate-600">الأسهم والاستثمارات</span><span class="font-medium text-slate-800">{{ result.formData.stocks | currency:'USD' }}</span></dd> }
+                @if(result.formData.inventory > 0) { <dd class="flex justify-between items-center p-4 sm:px-6 border-t border-slate-100"><span class="text-slate-600">المخزون</span><span class="font-medium text-slate-800">{{ result.formData.inventory | currency:'USD' }}</span></dd> }
+                @if(result.formData.receivables > 0) { <dd class="flex justify-between items-center p-4 sm:px-6 border-t border-slate-100"><span class="text-slate-600">الذمم المدينة</span><span class="font-medium text-slate-800">{{ result.formData.receivables | currency:'USD' }}</span></dd> }
+                
+                <dt class="p-4 sm:p-6 font-semibold text-red-800 bg-red-50 border-b border-t border-red-100">الخصوم</dt>
+                @if(result.formData.accountPayable > 0) { <dd class="flex justify-between items-center p-4 sm:px-6"><span class="text-slate-600">الذمم الدائنة</span><span class="font-medium text-slate-800">({{ result.formData.accountPayable | currency:'USD' }})</span></dd> }
+                @if(result.formData.expenses > 0) { <dd class="flex justify-between items-center p-4 sm:px-6 border-t border-slate-100"><span class="text-slate-600">المصاريف</span><span class="font-medium text-slate-800">({{ result.formData.expenses | currency:'USD' }})</span></dd> }
+                @if(result.formData.shortTermLoans > 0) { <dd class="flex justify-between items-center p-4 sm:px-6 border-t border-slate-100"><span class="text-slate-600">قروض قصيرة الأجل</span><span class="font-medium text-slate-800">({{ result.formData.shortTermLoans | currency:'USD' }})</span></dd> }
+                @if(result.formData.longTermDebt > 0) { <dd class="flex justify-between items-center p-4 sm:px-6 border-t border-slate-100"><span class="text-slate-600">ديون طويلة الأجل</span><span class="font-medium text-slate-800">({{ result.formData.longTermDebt | currency:'USD' }})</span></dd> }
+              </dl>
+            </div>
+          }
+        </div>
+
+        <!-- History Column -->
+        <div class="lg:col-span-1 animate-fade-in" style="animation-delay: 100ms;">
+          <div class="bg-white rounded-xl shadow-lg">
+            <h3 class="p-4 sm:p-6 text-lg font-semibold text-slate-800 border-b">سجل الحسابات</h3>
+            <app-history-chart 
+              [history]="history()" 
+              [selectedItem]="zakahService.viewingResult()"
+              (itemSelected)="onSelectHistoryItem($event)"
+            />
+            <ul class="divide-y divide-slate-100 max-h-[45vh] overflow-y-auto border-t">
+              @for (item of history(); track item.calculationDate) {
+                <li>
+                  <button (click)="onSelectHistoryItem(item)" class="w-full text-start p-4 sm:p-6 transition-colors" [class.bg-emerald-50]="zakahService.viewingResult() === item" [class.hover:bg-slate-50]="zakahService.viewingResult() !== item">
+                    <div class="flex items-center justify-between">
+                      <div>
+                        <p class="text-lg font-semibold" [class.text-emerald-700]="item.zakahDue > 0" [class.text-slate-700]="item.zakahDue === 0">{{ item.zakahDue | currency:'USD' }}</p>
+                        <p class="text-sm text-slate-500">حُسب في {{ item.calculationDate | date:'short' }}</p>
+                      </div>
+                      <span class="px-3 py-1 text-xs font-medium rounded-full" [class.bg-emerald-100]="item.zakahDue > 0" [class.text-emerald-800]="item.zakahDue > 0" [class.bg-slate-100]="item.zakahDue === 0" [class.text-slate-800]="item.zakahDue === 0">
+                        {{ item.zakahDue > 0 ? 'مستحقة' : 'غير مستحقة' }}
+                      </span>
+                    </div>
+                  </button>
+                </li>
+              }
+            </ul>
+          </div>
+        </div>
+      </div>
+    } @else {
+      <div class="text-center p-12 bg-white rounded-xl shadow-lg max-w-lg mx-auto">
+        <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+        <h2 class="mt-4 text-xl font-semibold text-slate-700">لم يتم العثور على حسابات.</h2>
+        <p class="text-slate-500 mt-2">ابدأ حسابًا جديدًا لترى حالة زكاتك.</p>
+      </div>
+    }
+  </div>
+</div>

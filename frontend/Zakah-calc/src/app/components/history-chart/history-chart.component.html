@@ -1,0 +1,35 @@
+<div class="w-full h-55 relative p-4">
+  @if (history().length > 0) {
+    <svg [attr.viewBox]="viewBox" preserveAspectRatio="xMidYMid meet" aria-label="Zakah History Chart">
+      <g>
+        @for (bar of bars(); track bar.data.calculationDate) {
+          <g class="cursor-pointer group" (click)="onBarClick(bar.data)" [attr.aria-label]="bar.data.zakahDue | currency:'USD' + ' في ' + (bar.data.calculationDate | date:'shortDate')">
+            <title>{{ bar.data.zakahDue | currency:'USD' }} في {{ bar.data.calculationDate | date:'shortDate' }}</title>
+            <rect 
+              [attr.x]="bar.x" 
+              [attr.y]="bar.y" 
+              [attr.width]="bar.width" 
+              [attr.height]="bar.height"
+              class="transition-all duration-300"
+              [class.fill-emerald-500]="selectedItem() === bar.data"
+              [class.fill-slate-300]="selectedItem() !== bar.data"
+              [class.group-hover:fill-emerald-400]="selectedItem() !== bar.data"
+              rx="2"
+            />
+            <text 
+              [attr.x]="bar.x + bar.width / 2" 
+              [attr.y]="svgHeight - 5" 
+              text-anchor="middle" 
+              class="text-[10px] sm:text-xs fill-slate-500 font-medium select-none">
+              {{ bar.data.calculationDate | date:'MMM yy' }}
+            </text>
+          </g>
+        }
+      </g>
+    </svg>
+  } @else {
+    <div class="flex items-center justify-center h-full text-center text-slate-400 p-4">
+      <p>سيظهر مخطط سجل زكاتك هنا بعد أول عملية حسابية.</p>
+    </div>
+  }
+</div>

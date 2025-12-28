@@ -1,1 +1,37 @@
-<p>zakah-guide works!</p>
+<div class="flex min-h-full">
+    <!-- Guide Sidebar -->
+    <aside class="w-1/4 max-w-xs bg-white border-l border-slate-200 p-6 hidden md:block">
+        <h2 class="text-lg font-semibold text-slate-800 mb-4">المواضيع</h2>
+        <nav>
+            <ul>
+                @for(section of guideSections(); track section.id) {
+                <li>
+                    <button (click)="selectSection(section.id)"
+                        class="w-full text-start px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                        [class.bg-emerald-100]="activeSectionId() === section.id"
+                        [class.text-emerald-700]="activeSectionId() === section.id"
+                        [class.text-slate-600]="activeSectionId() !== section.id"
+                        [class.hover:bg-slate-100]="activeSectionId() !== section.id">
+                        {{ section.title }}
+                    </button>
+                </li>
+                }
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Content Area -->
+    <div class="flex-1 p-4 sm:p-8 overflow-y-auto">
+        <div class="max-w-3xl mx-auto">
+            <div id="guide-content-top"></div>
+            @if(activeSection(); as section) {
+            <article class="prose prose-emerald max-w-none text-base animate-fade-in">
+                <h1 class="text-3xl font-bold text-slate-800">{{ section.title }}</h1>
+                <p class="text-slate-600 leading-relaxed">{{ section.content }}</p>
+            </article>
+            } @else {
+            <p>اختر موضوعًا للقراءة عنه.</p>
+            }
+        </div>
+    </div>
+</div>

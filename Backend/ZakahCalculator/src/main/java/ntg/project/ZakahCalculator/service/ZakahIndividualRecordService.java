@@ -1,8 +1,6 @@
 package ntg.project.ZakahCalculator.service;
 
-import ntg.project.ZakahCalculator.dto.request.ZakahCompanyRecordRequest;
 import ntg.project.ZakahCalculator.dto.request.ZakahIndividualRecordRequest;
-import ntg.project.ZakahCalculator.dto.response.ZakahCompanyRecordResponse;
 import ntg.project.ZakahCalculator.dto.response.ZakahIndividualRecordResponse;
 import ntg.project.ZakahCalculator.dto.response.ZakahIndividualRecordSummaryResponse;
 import ntg.project.ZakahCalculator.entity.ZakahIndividualRecord;

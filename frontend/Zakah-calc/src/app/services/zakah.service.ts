@@ -1,6 +1,6 @@
 // src/app/services/zakah.service.ts
 import { Injectable, signal, computed } from '@angular/core';
-import { Persona, ZakahFormData } from '../models/zakah.model';
+import { Persona, ZakahFormData, ZakahResult } from '../models/zakah.model';
 import * as XLSX from 'xlsx';
 
 @Injectable({
@@ -35,15 +35,31 @@ export class ZakahService {
   private individualSteps = ['البداية', 'التفاصيل', 'الأصول', 'الخصوم', 'الذهب', 'مراجعة'];
   private companySteps = ['البداية', 'التفاصيل', 'أصول الشركة', 'الخصوم', 'مراجعة'];
 
+  // History management
+  private selectedHistoryItemSignal = signal<ZakahResult | null>(null);
+  calculationHistory = signal<ZakahResult[]>([]);
+
   // Computed properties
   formData = this.formDataSignal.asReadonly();
   currentWizardStep = this.currentStepSignal.asReadonly();
   isCalculating = this.isCalculatingSignal.asReadonly();
+  selectedHistoryItem = this.selectedHistoryItemSignal.asReadonly();
 
   wizardSteps = computed(() => {
     const persona = this.formDataSignal().persona;
     return persona === 'individual' ? this.individualSteps : this.companySteps;
   });
+
+  latestResult = computed(() => this.calculationHistory().length > 0 ? this.calculationHistory()[0] : null);
+
+  historicalAverage = computed(() => {
+    const history = this.calculationHistory();
+    if (history.length === 0) return 0;
+    const sum = history.reduce((acc, item) => acc + item.zakahDue, 0);
+    return sum / history.length;
+  });
+
+  viewingResult = computed(() => this.selectedHistoryItem() || this.latestResult());
 
   updateFormData(patch: Partial<ZakahFormData>) {
     this.formDataSignal.update(current => ({
@@ -99,6 +115,26 @@ export class ZakahService {
         netAssets,
         zakahAmount
       });
+
+      // Create ZakahResult and add to history
+      const nisabThreshold = 10000; // Example threshold; adjust based on requirements
+      const zakatableAmount = netAssets;
+      const nisabMet = zakatableAmount >= nisabThreshold;
+      const zakahDue = nisabMet ? zakatableAmount * 0.025 : 0;
+
+      const result: ZakahResult = {
+        totalAssets,
+        totalLiabilities,
+        zakatableAmount,
+        nisabMet,
+        nisabThreshold,
+        zakahDue,
+        calculationDate: new Date().toISOString(),
+        formData: { ...data },
+        status: undefined
+      };
+
+      this.calculationHistory.update(history => [result, ...history]);
 
     } finally {
       this.isCalculatingSignal.set(false);
@@ -227,5 +263,43 @@ export class ZakahService {
 
     // إذا كان القيمة غير صالحة، إرجاع 0
     return isNaN(num) ? 0 : num;
+  }
+
+  startNewCalculation() {
+    // Reset form data to defaults (adjust as needed)
+    this.formDataSignal.set({
+      balanceSheetDate: new Date().toISOString().split('T')[0],
+      persona: 'individual',
+      cash: 0,
+      stocks: 0,
+      inventory: 0,
+      receivables: 0,
+      accountPayable: 0,
+      expenses: 0,
+      shortTermLoans: 0,
+      longTermDebt: 0,
+      goldWeightInGrams: 0,
+      goldPricePerGram: 75.21,
+      // goldValue: 0,
+      totalAssets: 0,
+      totalLiabilities: 0,
+      netAssets: 0,
+      zakahAmount: 0
+    });
+    this.selectedHistoryItemSignal.set(null);
+  }
+
+  selectHistoryItem(item: ZakahResult) {
+    this.selectedHistoryItemSignal.set(item);
+  }
+
+  viewLatestResult() {
+    this.selectedHistoryItemSignal.set(null);
+  }
+
+  markAsPaid(calculationDate: string) {
+    // Placeholder: Update history item status if needed (e.g., add a 'paid' field to ZakahResult)
+    console.log(`Marked as paid for calculation date: ${calculationDate}`);
+    // Example: this.calculationHistory.update(history => history.map(item => item.calculationDate === calculationDate ? { ...item, paid: true } : item));
   }
 }

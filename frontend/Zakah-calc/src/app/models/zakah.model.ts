@@ -27,3 +27,22 @@ export interface ZakahFormData {
   netAssets: number;
   zakahAmount: number;
 }
+
+export interface ZakahResult {
+status: any;
+  totalAssets: number;
+  totalLiabilities: number;
+  zakatableAmount: number;
+  nisabMet: boolean;
+  nisabThreshold: number;
+  zakahDue: number;
+  calculationDate: string;
+  formData: ZakahFormData;
+  // status: ZakahStatus;
+}
+
+interface GuideSection {
+  id: string;
+  title: string;
+  content: string;
+}
