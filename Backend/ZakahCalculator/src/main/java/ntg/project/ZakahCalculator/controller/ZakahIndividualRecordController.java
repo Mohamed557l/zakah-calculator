@@ -35,6 +35,20 @@ public class ZakahIndividualRecordController {
         return ResponseEntity.ok(responses);
     }
 
+    @GetMapping("/latest")
+    public ResponseEntity<ZakahIndividualRecordResponse> getLatestZakahRecord() {
+
+        ZakahIndividualRecordResponse response = zakahIndividualRecordService.findLatestByUserId();
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/latest/summary")
+    public ResponseEntity<ZakahIndividualRecordSummaryResponse> getLatestZakahRecordSummary() {
+        ZakahIndividualRecordSummaryResponse response = zakahIndividualRecordService.findLatestSummaryByUserId();
+        return ResponseEntity.ok(response);
+    }
+
     // Delete individual zakah record by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteZakahRecord(@PathVariable Long id) {

@@ -122,6 +122,30 @@ public class ZakahIndividualRecordServiceImpl implements ZakahIndividualRecordSe
                 .map(mapper::toSummaryResponse)
                 .collect(Collectors.toList());
     }
+    // =================== FindLastest ===================
+    @Override
+    public ZakahIndividualRecordResponse findLatestByUserId() {
+        Long userId = userUtil.getAuthenticatedUserId();
+        ZakahIndividualRecord latestRecord = repository
+                .findTopByUserIdOrderByCreatedAtDesc(userId)
+                .orElseThrow(() -> new BusinessException(
+                        ZAKAH_RECORD_NOT_FOUND,
+                        "No individual zakah records found for user"
+                ));
+        return mapper.toDetailedResponse(latestRecord);
+    }
+    // =================== FindLastestSummary ===================
+    @Override
+    public ZakahIndividualRecordSummaryResponse findLatestSummaryByUserId() {
+        Long userId = userUtil.getAuthenticatedUserId();
+        ZakahIndividualRecord latestRecord = repository
+                .findTopByUserIdOrderByCreatedAtDesc(userId)
+                .orElseThrow(() -> new BusinessException(
+                        ZAKAH_RECORD_NOT_FOUND,
+                        "No individual zakah records found for user"
+                ));
+        return mapper.toSummaryResponse(latestRecord);
+    }
 
     // =================== DELETE ===================
     @Override

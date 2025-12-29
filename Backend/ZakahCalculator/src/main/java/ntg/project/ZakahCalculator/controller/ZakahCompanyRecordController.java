@@ -49,6 +49,21 @@ public class ZakahCompanyRecordController {
                 zakahCompanyRecordService.findById(id)
         );
     }
+    // ================= Lastest =================
+    @GetMapping("/latest")
+    public ResponseEntity<ZakahCompanyRecordResponse> getLatestZakahRecord() {
+        ZakahCompanyRecordResponse response = zakahCompanyRecordService.findLatestByUserId();
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/latest/summary")
+    public ResponseEntity<ZakahCompanyRecordSummaryResponse> getLatestZakahRecordSummary() {
+        ZakahCompanyRecordSummaryResponse response = zakahCompanyRecordService.findLatestSummaryByUserId();
+
+        return ResponseEntity.ok(response);
+    }
+
 
     // ================= DELETE =================
     @DeleteMapping("/{id}")

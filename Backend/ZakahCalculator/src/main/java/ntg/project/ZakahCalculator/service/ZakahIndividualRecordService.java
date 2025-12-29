@@ -15,4 +15,6 @@ public interface ZakahIndividualRecordService {
     List<ZakahIndividualRecordSummaryResponse> findAllSummariesByUserId();
 
     void deleteByIdAndUserId(Long id);
+    ZakahIndividualRecordResponse findLatestByUserId();
+    ZakahIndividualRecordSummaryResponse findLatestSummaryByUserId();
 }

@@ -109,6 +109,35 @@ public class ZakahCompanyRecordServiceImpl implements ZakahCompanyRecordService 
                 .map(mapper::toSummaryResponse)
                 .toList();
     }
+    // ================= findLastest =================
+    @Override
+    public ZakahCompanyRecordResponse findLatestByUserId() {
+        Long userId = userUtil.getAuthenticatedUserId();
+
+
+        ZakahCompanyRecord latestRecord = recordRepository
+                .findTopByUserIdOrderByBalanceSheetDateDesc(userId)
+                .orElseThrow(() -> new BusinessException(
+                        ZAKAH_RECORD_NOT_FOUND,
+                        "No zakah records found for user"
+                ));
+        return mapper.toDetailedResponse(latestRecord);
+    }
+
+    @Override
+    public ZakahCompanyRecordSummaryResponse findLatestSummaryByUserId() {
+        Long userId = userUtil.getAuthenticatedUserId();
+
+
+        ZakahCompanyRecord latestRecord = recordRepository
+                .findTopByUserIdOrderByBalanceSheetDateDesc(userId)
+                .orElseThrow(() -> new BusinessException(
+                        ZAKAH_RECORD_NOT_FOUND,
+                        "No zakah records found for user"
+                ));
+        return mapper.toSummaryResponse(latestRecord);
+    }
+
 
     // ================= DELETE BY ID =================
     @Override
