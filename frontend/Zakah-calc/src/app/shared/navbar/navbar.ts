@@ -2,13 +2,12 @@ import { Component, signal, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthStorageService } from '../../services/storage-service/StorageService';
 import { AuthService } from '../../services/auth-service/auth.service';
-import { UserResponse } from '../../models/response/IAuthResponse';
-import { TypeLabelPipe } from '../../pipes/pipes/type-label-pipe';
+import { UserType } from '../../models/enums/UserType';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive , TypeLabelPipe],
+  imports: [RouterLink, RouterLinkActive ],
   templateUrl: './navbar.html',
 })
 export class Navbar {
@@ -28,6 +27,15 @@ export class Navbar {
 
   closeMenu() {
     this.isProfileMenuOpen.set(false);
+  }
+
+  switchWizard() {
+    this.isProfileMenuOpen.set(false);
+    if(this.type === UserType.ROLE_INDIVIDUAL){
+      this.router.navigate(['/individual/wizard']);
+    }else{
+      this.router.navigate(['/company/wizard']);
+    }
   }
 
   logout() {

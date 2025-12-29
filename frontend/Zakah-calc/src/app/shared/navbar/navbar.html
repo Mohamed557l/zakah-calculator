@@ -24,7 +24,7 @@
 
             <a routerLinkActive=" text-slate-900" class="nav-btn">مقدمة</a>
         </li>
-        <li routerLink="/dashboard" routerLinkActive=" bg-slate-200 text-slate-900"
+        <li routerLink="/company/dashboard" routerLinkActive=" bg-slate-200 text-slate-900"
             class="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-slate-200 cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink" viewBox="0 0 640 640">
                 <path
@@ -32,14 +32,14 @@
             </svg>
             <a class="nav-btn">لوحة التحكم</a>
         </li>
-        <li routerLink="/wizard" routerLinkActive=" bg-slate-200 text-slate-900"
+        <li (click)="switchWizard()" routerLinkActive=" bg-slate-200 text-slate-900"
             class="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-slate-200 cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round"
                     d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <a class="nav-btn">حساب جديد</a>
+            <a  class="nav-btn">حساب جديد</a>
         </li>
         <li routerLink="/guide" routerLinkActive=" bg-slate-200 text-slate-900"
             class="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-slate-200 cursor-pointer">

@@ -1,5 +1,5 @@
 export interface ZakahCompanyRecordRequest {
-  balance_sheet_date: string; // dd-MM-yyyy
+  balanceSheetDate: string; // dd-MM-yyyy
 
   // Assets
   cashEquivalents: number;
@@ -11,8 +11,9 @@ export interface ZakahCompanyRecordRequest {
   accountsPayable: number;
   accruedExpenses: number;
   shortTermLiability: number;
-  yearly_long_term_liabilities: number;
+  yearlyLongTermLiabilities: number;
 
   // Zakah Info
   goldPrice: number;
 }
+ 

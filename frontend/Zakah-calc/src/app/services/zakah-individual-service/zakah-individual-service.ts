@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -16,6 +16,10 @@ export class ZakahIndividualRecordService {
 
   private readonly BASE_URL = `${environment.apiUrl}/zakah/individual`;
 
+  latestResult = signal<ZakahIndividualRecordResponse | null>(null);
+  history = signal<ZakahIndividualRecordSummaryResponse[]>([]);
+  
+  
   constructor(private http: HttpClient) {}
 
   /* ================= GET ================= */
@@ -38,14 +42,13 @@ export class ZakahIndividualRecordService {
 
   // POST /zakah/individual/calculate
   calculateAndSave(
-    request: ZakahIndividualRecordRequest
-  ): Observable<ZakahIndividualRecordSummaryResponse> {
-    return this.http.post<ZakahIndividualRecordSummaryResponse>(
-      `${this.BASE_URL}/calculate`,
-      request
-    );
-  }
-
+     request: ZakahIndividualRecordRequest
+   ): Observable<ZakahIndividualRecordResponse> {
+     return this.http.post<ZakahIndividualRecordResponse>(
+       `${this.BASE_URL}/calculate`,
+       request
+     );
+   }
   /* ================= DELETE ================= */
 
   // DELETE /zakah/individual/{id}

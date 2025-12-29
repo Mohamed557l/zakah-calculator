@@ -53,17 +53,40 @@ export const routes: Routes = [
   { path: 'intro', component: Intro, canActivate: [authGuard] },
   {
     path: 'dashboard',
-    loadComponent: () => import('../app/components/company/dashboard/dashboard').then((m) => m.Dashboard),
+    loadComponent: () => import('../app/components/company/dashboard/dashboard').then((m) => m.DashboardComponent),
     canActivate: [authGuard],
   },
   {
-    path: 'wizard',
-    loadComponent: () => import('./components/company/wizard/wizard').then((m) => m.WizardComponent),
+    path: 'company',
+    children: [
+      { path: 'wizard', loadComponent: () => import('./components/company/wizard/wizard').then((m) => m.ZakahCompanyRecordComponent) },
+      { path: 'dashboard', loadComponent: () => import('../app/components/company/dashboard/dashboard').then((m) => m.DashboardComponent) },
+
+      {
+        path: 'after-calc',
+        loadComponent: () => import('./components/company/after-calc/after-calc.component').then((m) => m.AfterCalcComponent),
+        canActivate: [authGuard],
+      },
+    ],
     canActivate: [authGuard],
   },
+  { 
+    path: 'individual',
+    children: [
+      { path: 'wizard', loadComponent: () => import('./components/individual/wizard-individual/wizard-individual.component').then((m) => m.WizardIndividualComponent) },
+      { path: 'dashboard', loadComponent: () => import('../app/components/individual/dash-individual/dash-individual.component').then((m) => m.DashIndividualComponent) },
+      {
+        path: 'individual-after-calc',
+        loadComponent: () => import('./components/individual/individual-after-calc/individual-after-calc.component').then((m) => m.IndividualAfterCalcComponent),
+        canActivate: [authGuard],
+      },
+    ],
+    canActivate: [authGuard],
+  },
+
   {
     path: 'after-calc',
-    loadComponent: () => import('./components/after-calc/after-calc.component').then((m) => m.AfterCalcComponent),
+    loadComponent: () => import('./components/company/after-calc/after-calc.component').then((m) => m.AfterCalcComponent),
     canActivate: [authGuard],
   },
   {

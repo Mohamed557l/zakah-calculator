@@ -1,6 +1,18 @@
 import {ZakahStatus} from '../enums/ZakahStatus';
 
 export interface ZakahIndividualRecordResponse {
+currentZakahPool: string|number;
+balanceSheetDate: string|number|Date;
+totalLiabilities: string|number;
+nisabAmount: string|number;
+cashEquivalents: any;
+investment: any;
+inventory: any;
+accountsReceivable: any;
+accountsPayable: any;
+accruedExpenses: any;
+shortTermLiability: any;
+yearlyLongTermLiabilities: any;
   id: number;
   status: ZakahStatus;
 
@@ -21,6 +33,7 @@ export interface ZakahIndividualRecordResponse {
 }
 
 export interface ZakahIndividualRecordSummaryResponse {
+balanceSheetDate: string|number|Date;
   id: number;
   status: ZakahStatus;
   zakahAmount: number;

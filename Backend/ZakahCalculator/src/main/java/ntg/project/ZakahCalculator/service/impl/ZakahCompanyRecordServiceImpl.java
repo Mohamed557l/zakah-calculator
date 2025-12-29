@@ -34,7 +34,7 @@ public class ZakahCompanyRecordServiceImpl implements ZakahCompanyRecordService 
     private final ZakahCompanyRecordRepository recordRepository;
     private final ZakahCompanyRecordMapper mapper;
 
-    private static final BigDecimal ZAKAH_RATE = new BigDecimal("0.025");
+    private static final BigDecimal ZAKAH_RATE = new BigDecimal("0.02577");
     private static final BigDecimal NISAB_GRAMS = new BigDecimal("85");
     private static final long HAWL_DAYS = 365;
 
@@ -182,7 +182,9 @@ public class ZakahCompanyRecordServiceImpl implements ZakahCompanyRecordService 
 
     private boolean isZakahDue(ZakahStatus status) {
         return status == ZakahStatus.ELIGABLE_FOR_ZAKAH
-                || status == ZakahStatus.LAST_RECORD_DUE_AND_NEW_HAWL_BEGIN;
+                || status == ZakahStatus.LAST_RECORD_DUE_AND_NEW_HAWL_BEGIN
+                || status == ZakahStatus.ZAKAH_DUE
+                || status == ZakahStatus.HAWL_NOT_COMPLETED;
     }
 
     // ================= CALCULATIONS =================

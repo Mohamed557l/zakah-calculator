@@ -64,14 +64,13 @@ export class Login implements OnInit {
 
     this.authService.login(request).subscribe({
       next: (res) => {
-        console.log(res)
         this.router.navigate(['/intro']);
       },
       error: (err) => {
         if (err.status === 401) {
           this.serverError.set('البريد الإلكتروني أو كلمة المرور غير صحيحة');
-        }else if (err.status === 409){
-          console.log("409" + err)
+        }else if (err.status === 406){
+          console.log("406" + err)
           this.router.navigate(['/verify-otp'], {
             queryParams: { email: request.email }
           });
