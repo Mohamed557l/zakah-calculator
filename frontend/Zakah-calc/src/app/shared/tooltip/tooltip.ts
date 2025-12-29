@@ -2,10 +2,13 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+// filepath: d:\zakah-project\zakah-calculator\frontend\Zakah-calc\src\app\shared\tooltip\tooltip.ts
+// ...existing code...
 @Component({
   selector: 'app-tooltip',
   standalone: true,
   imports: [CommonModule],
+  host: { class: 'group' },  // Add this line
   template: `
     <div class="relative inline-block">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -31,6 +34,7 @@ import { CommonModule } from '@angular/common';
     }
   `]
 })
+// ...existing code...
 export class TooltipComponent {
   @Input() text: string = '';
 }

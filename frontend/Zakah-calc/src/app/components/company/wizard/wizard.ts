@@ -1,13 +1,16 @@
 import { ChangeDetectionStrategy, Component, inject, computed, signal } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { ZakahService } from '../../services/zakah.service';
-import { Persona, ZakahFormData } from '../../models/zakah.model';
-import { TooltipComponent } from '../../shared/tooltip/tooltip';
+import { ZakahFormData } from '../../../models/zakah.model';
+import { ZakahService } from '../../../services/zakah.service';
+import { TooltipComponent } from '../../../shared/tooltip/tooltip';
+import { RouterLink } from "@angular/router";
+
+
 
 @Component({
   selector: 'app-wizard',
   standalone: true,
-  imports: [CommonModule, TooltipComponent, CurrencyPipe],
+  imports: [CommonModule, TooltipComponent, CurrencyPipe, RouterLink],
   templateUrl: './wizard.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -53,12 +53,17 @@ export const routes: Routes = [
   { path: 'intro', component: Intro, canActivate: [authGuard] },
   {
     path: 'dashboard',
-    loadComponent: () => import('./components/dashboard/dashboard').then((m) => m.Dashboard),
+    loadComponent: () => import('../app/components/company/dashboard/dashboard').then((m) => m.Dashboard),
     canActivate: [authGuard],
   },
   {
     path: 'wizard',
-    loadComponent: () => import('./components/wizard/wizard').then((m) => m.WizardComponent),
+    loadComponent: () => import('./components/company/wizard/wizard').then((m) => m.WizardComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'after-calc',
+    loadComponent: () => import('./components/after-calc/after-calc.component').then((m) => m.AfterCalcComponent),
     canActivate: [authGuard],
   },
   {

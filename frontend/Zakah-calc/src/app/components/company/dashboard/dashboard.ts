@@ -1,8 +1,8 @@
 import { Component, computed, inject, output, signal } from '@angular/core';
-import { Persona, ZakahResult } from '../../models/zakah.model';
-import { ZakahService } from '../../services/zakah.service';
-import { HistoryChartComponent } from "../history-chart/history-chart.component";
 import { CurrencyPipe, DatePipe } from '@angular/common';
+import { ZakahResult } from '../../../models/zakah.model';
+import { ZakahService } from '../../../services/zakah.service';
+import { HistoryChartComponent } from '../../history-chart/history-chart.component';
 
 @Component({
   selector: 'app-dashboard',
