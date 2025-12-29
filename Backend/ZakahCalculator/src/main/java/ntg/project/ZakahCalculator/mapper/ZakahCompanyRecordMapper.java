@@ -16,7 +16,7 @@ public class ZakahCompanyRecordMapper {
 
         ZakahCompanyRecord record = new ZakahCompanyRecord();
 
-        record.setBalanceSheetDate(request.getBalance_sheet_date());
+        record.setBalanceSheetDate(request.getBalanceSheetDate());
 
         // Assets
         record.setCashEquivalents(request.getCashEquivalents());
@@ -29,7 +29,7 @@ public class ZakahCompanyRecordMapper {
         record.setShortTermLiability(request.getShortTermLiability());
         record.setAccruedExpenses(request.getAccruedExpenses());
         record.setYearlyLongTermLiabilities(
-                request.getYearly_long_term_liabilities()
+                request.getYearlyLongTermLiabilities()
         );
 
         record.setGoldPrice(request.getGoldPrice());

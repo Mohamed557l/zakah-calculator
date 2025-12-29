@@ -61,7 +61,7 @@ public class ZakahCompanyRecordServiceImpl implements ZakahCompanyRecordService 
 
         ZakahStatus status = determineStatus(
                 userId,
-                request.getBalance_sheet_date(),
+                request.getBalanceSheetDate(),
                 zakahPool,
                 nisabAmount
         );
@@ -168,7 +168,7 @@ public class ZakahCompanyRecordServiceImpl implements ZakahCompanyRecordService 
         return zero(r.getAccountsPayable())
                 .add(zero(r.getShortTermLiability()))
                 .add(zero(r.getAccruedExpenses()))
-                .add(zero(r.getYearly_long_term_liabilities()));
+                .add(zero(r.getYearlyLongTermLiabilities()));
     }
 
     private BigDecimal zero(BigDecimal v) {
@@ -183,7 +183,7 @@ public class ZakahCompanyRecordServiceImpl implements ZakahCompanyRecordService 
         if (request.getGoldPrice() == null || request.getGoldPrice().compareTo(BigDecimal.ZERO) <= 0) {
             throw new BusinessException(GOLD_PRICE_INVALID);
         }
-        if (request.getBalance_sheet_date() == null) {
+        if (request.getBalanceSheetDate() == null) {
             throw new BusinessException(INVALID_ZAKAH_DATA, "Balance sheet date is required");
         }
     }

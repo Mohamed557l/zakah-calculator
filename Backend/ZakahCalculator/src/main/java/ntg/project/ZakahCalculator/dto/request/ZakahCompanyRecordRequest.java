@@ -1,7 +1,8 @@
 package ntg.project.ZakahCalculator.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -13,10 +14,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class ZakahCompanyRecordRequest {
-    @NotBlank(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
+    @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PastOrPresent(message = "لايمكن ان يكون التاريخ فى المستقبل.")
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDate balance_sheet_date;
+    private LocalDate balanceSheetDate;
 
     //Assets
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
@@ -49,7 +49,7 @@ public class ZakahCompanyRecordRequest {
     private BigDecimal shortTermLiability;
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
-    private BigDecimal yearly_long_term_liabilities;
+    private BigDecimal yearlyLongTermLiabilities;
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
     private BigDecimal goldPrice;
