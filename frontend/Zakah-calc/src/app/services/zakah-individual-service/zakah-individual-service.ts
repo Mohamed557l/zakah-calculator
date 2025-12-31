@@ -18,8 +18,8 @@ export class ZakahIndividualRecordService {
 
   latestResult = signal<ZakahIndividualRecordResponse | null>(null);
   history = signal<ZakahIndividualRecordSummaryResponse[]>([]);
-  
-  
+
+
   constructor(private http: HttpClient) {}
 
   /* ================= GET ================= */
