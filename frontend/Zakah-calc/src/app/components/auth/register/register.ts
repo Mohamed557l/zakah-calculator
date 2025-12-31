@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, computed, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -15,11 +15,17 @@ import * as CryptoJS from 'crypto-js';
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './register.html'
 })
-export class Register implements OnInit {
+export class RegisterComponent implements OnInit {
 
-  secretKey: string = environment.secretKey;
+  secretKey = environment.secretKey;
+
   registerForm!: FormGroup;
-  isLoading = false; // Loading state
+
+  // signal للحالة
+  isLoading = signal(false);
+
+  // signal لتفعيل/تعطيل الزر بناءً على صحة الفورم
+  isFormValid = signal(false);
 
   constructor(
     private fb: FormBuilder,
@@ -28,16 +34,28 @@ export class Register implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.initForm();
+
+    // تحديث signal كل ما الفورم يتغير
+    this.registerForm.valueChanges.subscribe(() => {
+      this.isFormValid.set(this.registerForm.valid);
+    });
+  }
+
+  private initForm() {
     this.registerForm = this.fb.group(
       {
         name: ['', Validators.required],
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, Validators.minLength(8)]],
         confirmPassword: ['', Validators.required],
-        persona: ['individual', Validators.required],
+        persona: ['individual', Validators.required]
       },
       { validators: this.passwordMatchValidator }
     );
+
+    // initial value
+    this.isFormValid.set(this.registerForm.valid);
   }
 
   get f() {
@@ -48,52 +66,51 @@ export class Register implements OnInit {
     this.registerForm.patchValue({ persona: type });
   }
 
-  passwordMatchValidator(group: FormGroup) {
-    return group.get('password')?.value === group.get('confirmPassword')?.value
-      ? null
-      : { passwordMismatch: true };
+  private passwordMatchValidator(group: FormGroup) {
+    const password = group.get('password')?.value;
+    const confirmPassword = group.get('confirmPassword')?.value;
+    return password === confirmPassword ? null : { passwordMismatch: true };
   }
 
   onSubmit() {
-    if (this.registerForm.invalid || this.isLoading) {
+    if (!this.isFormValid() || this.isLoading()) {
       this.registerForm.markAllAsTouched();
       return;
     }
 
-    this.isLoading = true;
+    this.isLoading.set(true);
 
-    const nameParts = this.registerForm.value.name.trim().split(' ');
+    const formValue = this.registerForm.value;
 
     const request: RegistrationRequest = {
-      fullName: this.registerForm.value.name,
-      email: this.registerForm.value.email,
-      password: this.registerForm.value.password,
-      confirmPassword: this.registerForm.value.confirmPassword,
+      fullName: formValue.name,
+      email: formValue.email,
+      password: formValue.password,
+      confirmPassword: formValue.confirmPassword,
       userType:
-        this.registerForm.value.persona === 'individual'
+        formValue.persona === 'individual'
           ? UserType.ROLE_INDIVIDUAL
           : UserType.ROLE_COMPANY
     };
 
     this.authService.register(request).subscribe({
       next: () => {
-        const encryptedEmail = CryptoJS.AES.encrypt(
-          request.email,
-          this.secretKey
-        ).toString();
-
-        this.router.navigate(['/verify-otp'], {
-          queryParams: { email: encryptedEmail }
-        });
+        const encryptedEmail = CryptoJS.AES.encrypt(request.email, this.secretKey).toString();
+        this.router.navigate(['/verify-otp'], { queryParams: { email: encryptedEmail } });
       },
       error: (err) => {
         alert('فشل إنشاء الحساب');
         console.error('Register failed', err);
-        this.isLoading = false;
+        this.isLoading.set(false);
       },
       complete: () => {
-        this.isLoading = false;
+        this.isLoading.set(false);
       }
     });
   }
+
+  // signal computed لمثال توضيحي: تقدر تستخدمه لعرض رسالة خطأ إذا كلمة المرور لا تتطابق
+  passwordMismatch = computed(() =>
+    this.registerForm.get('password')?.value !== this.registerForm.get('confirmPassword')?.value
+  );
 }
