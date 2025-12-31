@@ -37,7 +37,7 @@ public class ZakahCompanyRecordResponse {
     // Current Record - Main Display
     private BigDecimal totalAssets;
     private BigDecimal totalLiabilities;
-    private BigDecimal currentZakahPool; // Net wealth (Assets - Liabilities)
+    private BigDecimal zakahPool; // Net wealth (Assets - Liabilities)
     private BigDecimal zakahAmount;
     private BigDecimal nisabAmount;
     private LocalDate balanceSheetDate;

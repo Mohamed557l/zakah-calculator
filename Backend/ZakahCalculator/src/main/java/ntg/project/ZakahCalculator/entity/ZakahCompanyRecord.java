@@ -52,6 +52,15 @@ public class ZakahCompanyRecord extends ZakahRecord {
     @Column(name = "balance_sheet_date")
     private LocalDate balanceSheetDate;
 
+    @Column(name= "total_assets")
+    private BigDecimal totalAssets;
+
+    @Column(name= "total_liabilities")
+    private BigDecimal totalLiabilities;
+
+    @Column(name= "zakah_pool")
+    private BigDecimal zakahPool;
+
     @Column(name = "zakah_amount")
     private BigDecimal zakahAmount;
 }

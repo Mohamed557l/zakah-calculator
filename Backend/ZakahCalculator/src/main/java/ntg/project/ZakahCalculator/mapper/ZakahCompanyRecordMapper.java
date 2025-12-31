@@ -30,7 +30,6 @@ public class ZakahCompanyRecordMapper {
         record.setYearlyLongTermLiabilities(
                 request.getYearlyLongTermLiabilities()
         );
-
         record.setGoldPrice(request.getGoldPrice());
         record.setUser(user);
 
@@ -63,10 +62,14 @@ public class ZakahCompanyRecordMapper {
                 .accruedExpenses(entity.getAccruedExpenses())
                 .yearlyLongTermLiabilities(entity.getYearlyLongTermLiabilities())
                 .goldPrice(entity.getGoldPrice())
-                .zakahAmount(entity.getZakahAmount())
                 .balanceSheetDate(entity.getBalanceSheetDate())
-                .totalAssets(entity.getCashEquivalents().add(entity.getAccountsReceivable().add(entity.getInventory()).add(entity.getInvestment())))
+/*                .totalAssets(entity.getCashEquivalents().add(entity.getAccountsReceivable().add(entity.getInventory()).add(entity.getInvestment())))
                 .totalLiabilities(entity.getAccountsPayable().add(entity.getAccountsPayable()).add(entity.getShortTermLiability()).add(entity.getAccruedExpenses()))
+                */
+                .totalAssets(entity.getTotalAssets())
+                .totalLiabilities(entity.getTotalLiabilities())
+                .zakahPool(entity.getZakahPool())
+                .zakahAmount(entity.getZakahAmount())
                 .build();
     }
 }

@@ -74,6 +74,9 @@ public class ZakahCompanyRecordServiceImpl implements ZakahCompanyRecordService 
         ZakahCompanyRecord record = mapper.toEntity(request, user);
         record.setStatus(status);
         record.setZakahAmount(zakahAmount);
+        record.setTotalAssets(totalAssets);
+        record.setTotalLiabilities(totalLiabilities);
+        record.setZakahPool(zakahPool);
 
         recordRepository.save(record);
 
