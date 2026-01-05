@@ -53,7 +53,6 @@ export class Navbar {
   }
 
   logout() {
-    AuthStorageService.clear();
     this._AuthService.logout();
     this.isProfileMenuOpen.set(false);
     this.router.navigate(['/']);

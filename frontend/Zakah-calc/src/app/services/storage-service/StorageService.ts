@@ -135,6 +135,14 @@ export class AuthStorageService {
     return this.getUser()?.fullName ?? null;
   }
 
+  static isDeleted(): boolean {
+    const user = this.getUser();
+    console.log(user);
+    if (!user) return false;
+
+    return Boolean(user.deleted);
+  }
+
   /* ================= ROLE HELPERS ================= */
 
   static isIndividual(): boolean {

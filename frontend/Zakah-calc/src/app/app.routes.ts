@@ -18,16 +18,16 @@ export const routes: Routes = [
     path: '',
     canActivate: [permitGuard],
     children: [
-      { path: '', component: Landing },
-      { path: 'login', component: Login },
-      { path: 'register', component: RegisterComponent },
+      {path: '', component: Landing},
+      {path: 'login', component: Login},
+      {path: 'register', component: RegisterComponent},
 
       // ===== PASSWORD FLOW =====
       {
         path: 'password',
         children: [
-          { path: '', redirectTo: 'forgot-password', pathMatch: 'full' },
-          { path: 'forgot-password', component: ForgetPasswordComponent },
+          {path: '', redirectTo: 'forgot-password', pathMatch: 'full'},
+          {path: 'forgot-password', component: ForgetPasswordComponent},
           {
             path: 'verify-password-otp',
             loadComponent: () =>
@@ -58,8 +58,8 @@ export const routes: Routes = [
     path: '',
     canActivate: [authGuard],
     children: [
-      { path: 'intro', component: Intro },
-      { path: 'navbar', component: Navbar },
+      {path: 'intro', component: Intro},
+      {path: 'navbar', component: Navbar},
       {
         path: 'profile',
         loadComponent: () =>
@@ -75,10 +75,18 @@ export const routes: Routes = [
     ],
   },
 
+
+  {
+    path: 'restore-account',
+    loadComponent: () => import('./components/restore-account/restore-account.component')
+      .then(m => m.RestoreAccountComponent),
+    canActivate: [authGuard],
+  },
+
   // ===================== COMPANY (ROLE_COMPANY) =====================
   {
     path: 'company',
-      canActivate: [roleGuard],
+    canActivate: [authGuard, roleGuard],
     children: [
       {
         path: 'wizard',
@@ -109,7 +117,7 @@ export const routes: Routes = [
   // ===================== INDIVIDUAL (ROLE_INDIVIDUAL) =====================
   {
     path: 'individual',
-     canActivate: [roleGuard],
+    canActivate: [authGuard, roleGuard],
     children: [
       {
         path: 'wizard',
@@ -146,5 +154,5 @@ export const routes: Routes = [
   },
 
   // ===================== WILDCARD =====================
-  { path: '**', redirectTo: 'not-found' },
+  {path: '**', redirectTo: 'not-found'},
 ];

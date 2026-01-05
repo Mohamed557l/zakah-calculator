@@ -15,12 +15,12 @@ public enum ErrorCode {
     EMAIL_ALREADY_EXISTS("EMAIL_ALREADY_EXISTS", "email already exists", CONFLICT),
     USER_ALREADY_DELETED("USER_ALREADY_DELETED", "User is already deleted", CONFLICT),
     USER_ALREADY_ACTIVE("USER_ALREADY_ACTIVE", "User is already active", CONFLICT),
-    ACCOUNT_NOT_VERIFIED("ACCOUNT_NOT_VERIFIED", "account not verified", FORBIDDEN),
+    ACCOUNT_NOT_VERIFIED("ACCOUNT_NOT_VERIFIED", "account not verified", CONFLICT),
 
-    ERR_USER_DISABLED("ERR_USER_DISABLED", "user is disabled", FORBIDDEN),
+    ERR_USER_DISABLED("ERR_USER_DISABLED", "user is disabled", CONFLICT),
 
     BAD_CREDENTIALS("BAD_CREDENTIALS", "Username and / or password is incorrect", UNAUTHORIZED),
-    INVALID_CURRENT_PASSWORD("INVALID_CURRENT_PASSWORD", "Current password is invalid", UNAUTHORIZED),
+    INVALID_CURRENT_PASSWORD("INVALID_CURRENT_PASSWORD", "Current password is invalid", CONFLICT),
 
     // ===== Password / Validation =====
     CHANGE_PASSWORD_MISMATCH("CHANGE_PASSWORD_MISMATCH", "Current password and new password are the same", BAD_REQUEST),

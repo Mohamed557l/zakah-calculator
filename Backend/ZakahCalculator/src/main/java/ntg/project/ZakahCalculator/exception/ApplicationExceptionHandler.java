@@ -21,8 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static ntg.project.ZakahCalculator.exception.ErrorCode.*;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
 @RequiredArgsConstructor
@@ -148,6 +147,16 @@ public class ApplicationExceptionHandler {
         return new ResponseEntity<>(body, BAD_REQUEST);
     }
 
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponse> handleException(final RuntimeException ex) {
+        log.debug(ex.getMessage(), ex);
+        final ErrorResponse body = ErrorResponse.builder()
+                .code("RUNTIME_EXCEPTION")
+                .message(ex.getMessage())
+                .build();
+        return new ResponseEntity<>(body, INTERNAL_SERVER_ERROR);
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(final Exception ex) {

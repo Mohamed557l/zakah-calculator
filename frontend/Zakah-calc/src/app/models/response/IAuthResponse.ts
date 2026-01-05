@@ -14,7 +14,7 @@ export interface UserResponse {
   fullName: string;
   userType: UserType;
   isVerified: boolean;
-  isDeleted: boolean;
+  deleted: boolean;
 }
 
 /* ===========================

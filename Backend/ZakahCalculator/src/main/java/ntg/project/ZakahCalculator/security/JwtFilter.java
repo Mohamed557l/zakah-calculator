@@ -49,7 +49,13 @@ public class JwtFilter extends OncePerRequestFilter {
                 throw new BusinessException(ErrorCode.ACCOUNT_NOT_VERIFIED);
             }
             if (userDetails.isDeleted() && !request.getRequestURI().equals("/api/v1/users/restore")) {
-                throw new BusinessException(ErrorCode.USER_ALREADY_DELETED);
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.setContentType("application/json");
+                response.getWriter().write(
+                        "{\"code\":\"USER_ALREADY_DELETED\",\"message\":\"User is deleted\"}"
+                );
+                response.getWriter().flush();
+                return; // ما نكملش الفلترة أو أي controller
             }
             if (this.jwtService.isTokenValid(jwt, userDetails.getUsername())) {
                 final UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

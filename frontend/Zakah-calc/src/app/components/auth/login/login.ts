@@ -1,10 +1,10 @@
 import {AfterViewInit, Component, ElementRef, OnInit, signal, ViewChild} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import {CommonModule} from '@angular/common';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Router, RouterLink} from '@angular/router';
 
-import { AuthService } from '../../../services/auth-service/auth.service';
-import { AuthenticationRequest } from '../../../models/request/IAuthRequest';
+import {AuthService} from '../../../services/auth-service/auth.service';
+import {AuthenticationRequest} from '../../../models/request/IAuthRequest';
 import * as CryptoJS from 'crypto-js';
 import {environment} from '../../../../environments/environment';
 
@@ -15,18 +15,19 @@ import {environment} from '../../../../environments/environment';
   templateUrl: './login.html'
 })
 export class Login implements OnInit {
- 
+
   secretKey: string = environment.secretKey;
   loginForm!: FormGroup;
   isLoading = signal(false);
   serverError = signal<string | null>(null);
-  @ViewChild('googleBtn', { static: true }) googleBtn!: ElementRef;
+  @ViewChild('googleBtn', {static: true}) googleBtn!: ElementRef;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) {
+  }
 
 
   ngOnInit(): void {
@@ -78,26 +79,23 @@ export class Login implements OnInit {
 
         if (code === 'BAD_CREDENTIALS') {
           this.serverError.set('البريد الإلكتروني أو كلمة المرور غير صحيحة');
-        }
-
-        else if (code === 'ACCOUNT_NOT_VERIFIED') {
+        } else if (code === 'ACCOUNT_NOT_VERIFIED') {
           const encryptedEmail = CryptoJS.AES.encrypt(
             request.email,
             this.secretKey
           ).toString();
 
           this.router.navigate(['/verify-otp'], {
-            queryParams: { email: encryptedEmail }
+            queryParams: {email: encryptedEmail}
           });
-        }
-
-        else {
+        }else if (code === 'USER_ALREADY_DELETED') {
+          this.router.navigate(['/restore-account']);
+        } else {
           this.serverError.set('حدث خطأ غير متوقع، حاول مرة أخرى');
         }
 
         this.isLoading.set(false);
       }
     });
-
   }
 }
