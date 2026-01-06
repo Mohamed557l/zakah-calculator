@@ -9,7 +9,8 @@ import {
   ChangePasswordRequest
 } from '../../models/request/IAuthRequest';
 import { ProfileUpdateResponse } from '../../models/response/IAuthResponse';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth-service/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -19,21 +20,22 @@ import {Router} from '@angular/router';
   styleUrl: './profile.css'
 })
 export class Profile implements OnInit {
-  
+
   private fb = inject(FormBuilder);
   private userService = inject(UserService);
+  private authService = inject(AuthService);
   private router = inject(Router);
   save = output<void>();
   cancel = output<void>();
   deleteAccount = output<void>();
-  
+
   /* ================= FORMS ================= */
-  
+
   infoForm: FormGroup = this.fb.group({
     name: ['', Validators.required],
     email: [{ value: '', disabled: true }]
   });
-  
+
   passwordForm: FormGroup = this.fb.group({
     currentPassword: ['', Validators.required],
     newPassword: ['', [Validators.required, Validators.minLength(3)]],
@@ -155,12 +157,13 @@ export class Profile implements OnInit {
     if (!confirm('هل أنت متأكد من حذف الحساب؟')) return;
 
     this.userService.deleteAccount().subscribe(() => {
-      confirm('تم حذف الحساب. سيتم توجيهك إلى صفحة استعادة الحساب.') ;
+      confirm('تم حذف الحساب. سيتم توجيهك إلى صفحة استعادة الحساب.');
       this.deleteAccount.emit();
-      AuthStorageService.clear();
-       this.router.navigate(['/login']);  ;
-      
-    } );
+      this.authService.logout();
+
+      this.router.navigate(['/login']);;
+
+    });
   }
 
 
@@ -177,5 +180,5 @@ export class Profile implements OnInit {
   // onDeleteAccount() {
   //   this.deleteAccount.emit();
   // }
- 
-  }
+
+}
