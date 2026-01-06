@@ -43,21 +43,38 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  private initForm() {
-    this.registerForm = this.fb.group(
-      {
-        name: ['', Validators.required , Validators.maxLength(50),Validators.minLength(1)],
-        email: ['', [Validators.required, Validators.email, Validators.minLength(5), Validators.maxLength(50)]],
-        password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(64), Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W).*$/)]],
-        confirmPassword: ['', [Validators.required, Validators.minLength(8)] ],
-        persona: ['individual', Validators.required]
-      },
-      { validators: this.passwordMatchValidator }
-    );
+ private initForm() {
+  this.registerForm = this.fb.group(
+    {
+      name: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
 
-    // initial value
-    this.isFormValid.set(this.registerForm.valid);
-  }
+      email: ['', [
+        Validators.required,
+        Validators.email,
+        Validators.minLength(5),
+        Validators.maxLength(50)
+      ]],
+
+      password: ['', [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.maxLength(64),
+        Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W).*$/)
+      ]],
+
+      confirmPassword: ['', [
+        Validators.required,
+        Validators.minLength(8)
+      ]],
+
+      persona: ['individual', Validators.required]
+    },
+    { validators: this.passwordMatchValidator }
+  );
+
+  this.isFormValid.set(this.registerForm.valid);
+}
+
 
   get f() {
     return this.registerForm.controls;
