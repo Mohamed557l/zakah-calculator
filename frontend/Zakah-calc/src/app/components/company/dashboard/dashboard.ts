@@ -6,13 +6,14 @@ import {
 } from '../../../models/response/ZakahCompanyResponse';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+
 
 @Component({
   selector: 'app-dashboard',
-  standalone: true,
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css'],
-  imports: [CurrencyPipe, DatePipe]
+  imports: [CurrencyPipe, DatePipe, NgxSpinnerModule]
 })
 export class DashboardComponent implements OnInit {
   zakahService = inject(ZakahCompanyRecordService);
@@ -22,10 +23,11 @@ export class DashboardComponent implements OnInit {
   // 🔹 الربط المباشر بـ signals الخدمة لضمان التزامن اللحظي
   currentRecord = this.zakahService.latestResult;
   history = this.zakahService.history;
-
+  spinner = inject(NgxSpinnerService);
   isViewingHistory = signal(false);
 
   ngOnInit() {
+    this.spinner.show();
     // تحميل البيانات وتحديث الـ signals في الخدمة
     this.zakahService.getAllSummaries().subscribe({
       next: (list) => {
@@ -33,6 +35,17 @@ export class DashboardComponent implements OnInit {
         this.loadFullRecord(list[0].id);
 
         this.isLoading.set(false);
+        setTimeout(() => {
+          if (!this.isLoading()) {
+            this.spinner.hide();
+          }
+        }, 1000); // 🔹 إخفاء الـ spinner
+
+      },
+      error: (err) => {
+        console.error('Error loading summaries:', err);
+        // this.isLoading.set(false);
+        this.spinner.hide();
       }
     });
   }
