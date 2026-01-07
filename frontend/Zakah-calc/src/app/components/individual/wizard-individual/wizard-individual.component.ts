@@ -1,9 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
-import { ZakahIndividualRecordRequest } from '../../../models/request/ZakahIndividualRequest';
-import { ZakahIndividualRecordService } from '../../../services/zakah-individual-service/zakah-individual-service';
-import { Router } from '@angular/router';
-import { CurrencyPipe } from '@angular/common';
-import { TooltipComponent } from "../../../shared/tooltip/tooltip";
+import {Component, inject, signal} from '@angular/core';
+import {ZakahIndividualRecordRequest} from '../../../models/request/ZakahIndividualRequest';
+import {ZakahIndividualRecordService} from '../../../services/zakah-individual-service/zakah-individual-service';
+import {Router} from '@angular/router';
+import {CurrencyPipe} from '@angular/common';
+import {TooltipComponent} from "../../../shared/tooltip/tooltip";
 
 @Component({
   selector: 'app-wizard-individual',
@@ -34,7 +34,7 @@ export class WizardIndividualComponent {
     const currentData = this.formData();
     if (!currentData.calculationDate) {
       const today = new Date().toISOString().split('T')[0];
-      this.zakahService.updateFormData({ calculationDate: today });
+      this.zakahService.updateFormData({calculationDate: today});
     }
   }
 
@@ -81,10 +81,9 @@ export class WizardIndividualComponent {
   }
 
 
-
   onDateChange(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
-    this.zakahService.updateFormData({ calculationDate: value });
+    this.zakahService.updateFormData({calculationDate: value});
     this.fieldErrors.update(errors => ({
       ...errors,
       calculationDate: value ? undefined : 'يرجى اختيار تاريخ'
@@ -114,8 +113,13 @@ export class WizardIndividualComponent {
   }
 
   // ================= Wizard =================
-  next(): void { this.zakahService.nextStep(); }
-  back(): void { this.zakahService.prevStep(); }
+  next(): void {
+    this.zakahService.nextStep();
+  }
+
+  back(): void {
+    this.zakahService.prevStep();
+  }
 
   calculate(): void {
     if (!this.validateAll()) return;
@@ -135,7 +139,9 @@ export class WizardIndividualComponent {
         this.errorMessage.set('حدث خطأ أثناء حساب الزكاة. يرجى التأكد من البيانات والمحاولة لاحقاً.');
         this.isCalculating.set(false);
       },
-      complete: () => { this.isCalculating.set(false); }
+      complete: () => {
+        this.isCalculating.set(false);
+      }
     });
   }
 

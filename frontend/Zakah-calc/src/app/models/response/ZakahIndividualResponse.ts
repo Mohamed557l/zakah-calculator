@@ -1,9 +1,6 @@
 import { ZakahStatus } from '../enums/ZakahStatus';
 
 export interface ZakahIndividualRecordResponse {
-
-  nisabAmount: string | number;
-  
   id: number;
   status: ZakahStatus;
 
@@ -13,14 +10,26 @@ export interface ZakahIndividualRecordResponse {
   silver: number;
   stocks: number;
   bonds: number;
+  tradeOffers: number;
+  jewelry: number;
+  otherAssets: number;
+
+  // Liabilities
+  loans: number;
+  debt: number;
 
   // Zakah Info
   goldPrice: number;
-  // Main Info
+
+  // Calculated Values (Main Display)
   totalAssets: number;
+  totalLiabilities: number;
+  zakahPool: number;
   zakahAmount: number;
-  calculationDate: string;
+
+  calculationDate: string; // yyyy-MM-dd
 }
+
 
 export interface ZakahIndividualRecordSummaryResponse {
   balanceSheetDate: string | number | Date;

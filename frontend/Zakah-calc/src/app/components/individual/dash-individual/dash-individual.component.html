@@ -1,6 +1,6 @@
 <ngx-spinner
   bdColor="rgba(0, 0, 0, 0.9)"
-  [fullScreen]="true" class="text-center">
+  [fullScreen]="true" class="text-center" type="ball-spin-clockwise">
   <img src="/imgs/LogoZakah.png" class="w-90 h-90" alt="Loading..." />
   <p style="color: white">حسابة الزكاة...</p>
   <!-- <p style="color: white">Loading...</p> -->
@@ -101,7 +101,7 @@
             </svg>
           </div>
           <p class="text-3xl font-bold text-green-700">الزكاة غير مستحقة</p>
-          @if (+result.zakahAmount < +result.nisabAmount) { <p class="text-slate-500 mt-2">وعاؤك الزكوي البالغ <span
+          @if (result.status === ZakahStatus.BELOW_NISAB) { <p class="text-slate-500 mt-2">وعاؤك الزكوي البالغ <span
               class="font-semibold">{{ result.totalAssets| currency:'EGP' }}</span> أقل من حد النصاب.</p>
             } @else {
             <p class="text-slate-500 mt-2">وعاؤك الزكوي هو صفر أو أقل.</p>
@@ -137,18 +137,40 @@
               </span><span class="font-medium text-slate-800">{{ result.silver |
                 currency:'EGP' }}</span></dd> }
             @if(result.bonds > 0) { <dd class="flex justify-between items-center p-4 sm:px-6 border-t border-slate-100">
-              <span class="text-slate-600">الشهادات و الاستثمارات الاخرى
+              <span class="text-slate-600">الشهادات
 
               </span><span class="font-medium text-slate-800">{{
                 result.bonds | currency:'EGP' }}</span>
             </dd> }
-            <!--
-              <dt class="p-4 sm:p-6 font-semibold text-red-800 bg-red-50 border-b border-t border-red-100">الخصوم</dt>
-              @if(result.bonds > 0) { <dd class="flex justify-between items-center p-4 sm:px-6"><span
-                  class="text-slate-600">الحسابات الدائنة (ِAccounts Payable)</span><span
+            @if(result.tradeOffers > 0) { <dd class="flex justify-between items-center p-4 sm:px-6 border-t border-slate-100">
+              <span class="text-slate-600">عروض التجارة
+
+              </span><span class="font-medium text-slate-800">{{
+                result.tradeOffers | currency:'EGP' }}</span>
+            </dd> }
+            @if(result.jewelry > 0) { <dd class="flex justify-between items-center p-4 sm:px-6 border-t border-slate-100">
+              <span class="text-slate-600">المجوهرات
+
+              </span><span class="font-medium text-slate-800">{{
+                result.jewelry | currency:'EGP' }}</span>
+            </dd> }
+            @if(result.otherAssets > 0) { <dd class="flex justify-between items-center p-4 sm:px-6 border-t border-slate-100">
+              <span class="text-slate-600">الاستثمارات الاخرى
+
+              </span><span class="font-medium text-slate-800">{{
+                result.otherAssets | currency:'EGP' }}</span>
+            </dd> }
+<!--            ----------------------------------------------------->
+              <dt class="p-4 sm:p-6 font-semibold text-red-800 bg-red-50 border-b border-t border-red-100">الالتزامات</dt>
+              @if(result.loans > 0) { <dd class="flex justify-between items-center p-4 sm:px-6"><span
+                  class="text-slate-600">القروض</span><span
                   class="font-medium text-slate-800">({{
-                  result.bonds | currency:'EGP' }})</span></dd> }
-             -->
+                  result.loans | currency:'EGP' }})</span></dd> }
+
+            @if(result.debt > 0) { <dd class="flex justify-between items-center p-4 sm:px-6"><span
+                  class="text-slate-600">الديون</span><span
+                  class="font-medium text-slate-800">({{
+                  result.debt | currency:'EGP' }})</span></dd> }
           </dl>
         </div>
       </div>

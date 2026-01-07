@@ -23,7 +23,7 @@ export class ZakahIndividualRecordService {
   latestResult = signal<ZakahIndividualRecordResponse | null>(null);
   history = signal<ZakahIndividualRecordResponse[]>([]);
   currentWizardStep = signal<number>(0);
-  wizardSteps = signal<string[]>(['البداية', 'الأصول', 'التفاصيل', 'مراجعة']);
+  wizardSteps = signal<string[]>(['البداية', 'الأصول','الالتزامات', 'التفاصيل', 'مراجعة']);
   isCalculating = signal<boolean>(false);
 
   constructor(private http: HttpClient) { }
@@ -40,13 +40,18 @@ export class ZakahIndividualRecordService {
 
     const request: ZakahIndividualRecordRequest = {
       calculationDate: data.calculationDate,
+      goldPrice: Number(data.goldPrice),
 
       cash: Number(data.cash),
       gold: Number(data.gold),
       silver: Number(data.silver),
       stocks: Number(data.stocks),
       bonds: Number(data.bonds),
-      goldPrice: Number(data.goldPrice)
+      tradeOffers: Number(data.tradeOffers),
+      jewelry: Number(data.jewelry),
+      otherAssets: Number(data.otherAssets),
+      loans: Number(data.loans),
+      debt: Number(data.debt),
     };
 
     console.log('REQUEST SENT TO BACKEND:', request);
@@ -67,13 +72,18 @@ export class ZakahIndividualRecordService {
   private getInitialFormData(): ZakahIndividualRecordRequest {
     return {
       calculationDate: new Date().toISOString().split('T')[0],
+      goldPrice: 0,
+
       cash: 0,
       gold: 0,
       silver: 0,
       bonds: 0,
       stocks: 0,
-      goldPrice: 0
-
+      tradeOffers: 0,
+      jewelry: 0,
+      otherAssets: 0,
+      loans: 0,
+      debt: 0,
     };
   }
 

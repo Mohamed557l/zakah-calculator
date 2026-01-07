@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import {Component, computed, inject, OnInit, signal} from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { ZakahIndividualRecordService } from '../../../services/zakah-individual-service/zakah-individual-service';
 import { Router } from '@angular/router';
@@ -7,6 +7,7 @@ import {
   ZakahIndividualRecordSummaryResponse
 } from '../../../models/response/ZakahIndividualResponse';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import {ZakahStatus} from '../../../models/enums/ZakahStatus';
 
 
 @Component({
@@ -16,7 +17,7 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
   imports: [CurrencyPipe, DatePipe, NgxSpinnerModule],
   standalone: true,
 })
-export class DashIndividualComponent {
+export class DashIndividualComponent implements OnInit {
 
   zakahService = inject(ZakahIndividualRecordService);
   private router = inject(Router);
@@ -30,9 +31,9 @@ export class DashIndividualComponent {
   isViewingHistory = signal(false);
 
   ngOnInit() {
-   
-      this.spinner.show();
-  // 🔹 تشغيل الـ spinner
+    // 🔹 تشغيل الـ spinner
+    this.isLoading.set(true);
+    this.spinner.show();
 
     this.zakahService.getAllSummaries().subscribe({
       next: (list) => {
@@ -43,22 +44,15 @@ export class DashIndividualComponent {
         }
 
         this.isLoading.set(false);
-        setTimeout(() => {
-    if (this.isLoading()) {
-      this.spinner.hide();
-    }
-  }, 700);
-      // 🔹 إخفاء الـ spinner
+        this.spinner.hide(); // ✅ اقفله مباشرة
       },
       error: (err) => {
         console.error(err);
-        this.spinner.hide();
+        this.isLoading.set(false);
+        this.spinner.hide(); // ✅ اقفله في error كمان
       }
     });
   }
-
-
-
 
   private loadFullRecord(id: number) {
     setTimeout(() => {
@@ -130,4 +124,5 @@ export class DashIndividualComponent {
     return h.reduce((sum, i) => sum + i.zakahAmount, 0) / h.length;
   });
 
+  protected readonly ZakahStatus = ZakahStatus;
 }

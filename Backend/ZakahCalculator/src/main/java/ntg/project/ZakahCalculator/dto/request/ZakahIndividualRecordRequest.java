@@ -17,43 +17,43 @@ public class ZakahIndividualRecordRequest {
     //To be added to total assets
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
-    private BigDecimal cash;
+    private BigDecimal cash;//
 
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
-    private BigDecimal gold;
+    private BigDecimal gold;//
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
-    private BigDecimal silver;
+    private BigDecimal silver;//
 
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
-    private BigDecimal stocks;
+    private BigDecimal stocks;//
 
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
-    private BigDecimal bonds;
+    private BigDecimal bonds; // الشهادات //
 
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
-    private BigDecimal tradeOffers;
+    private BigDecimal tradeOffers; // عروض التجارة
 
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
-    private BigDecimal jewelry;
+    private BigDecimal jewelry; // المجوهرات
 
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
-    private BigDecimal otherAssets;
+    private BigDecimal otherAssets; // الاستثمارات الاخرى
 
     //To be deducted from total assists ( total liabilities)
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
-    private BigDecimal loans;
+    private BigDecimal loans; // القروض
 
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
-    private BigDecimal debt;
+    private BigDecimal debt; // الديون
 
     //General
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")

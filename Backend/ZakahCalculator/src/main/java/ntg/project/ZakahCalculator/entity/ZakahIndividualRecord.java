@@ -50,7 +50,7 @@ public class ZakahIndividualRecord extends ZakahRecord {
     private BigDecimal loans;  // "قروض (المخططة لدفعها خلال حول الذكاة)"
 
     @Column(precision = 15, scale = 2)
-    private BigDecimal debt; // "ديون (مستحقة السداد خلال الحول )"
+    private BigDecimal debt; // "ديون (مستحقة السداد خلال الحول)"
 
 
 
