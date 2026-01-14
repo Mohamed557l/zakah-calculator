@@ -17,6 +17,14 @@ public class ZakahCompanyRecordRequest {
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PastOrPresent(message = "لايمكن ان يكون التاريخ فى المستقبل.")
     private LocalDate balanceSheetDate;
+    @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
+    @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
+    private BigDecimal goldPrice;
+
+    //Income Statment Items
+    @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
+    @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
+    private BigDecimal netProfit;
 
     //Assets
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
@@ -25,7 +33,7 @@ public class ZakahCompanyRecordRequest {
 
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
-    private BigDecimal investment;
+    private BigDecimal accountsReceivable;
 
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
@@ -33,10 +41,14 @@ public class ZakahCompanyRecordRequest {
 
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
-    private BigDecimal accountsReceivable;
+    private BigDecimal investment;
 
+    @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
+    @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
+    private BigDecimal generatingFixedAssets;
 
     //Liabilities
+
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
     private BigDecimal accountsPayable;
@@ -44,13 +56,22 @@ public class ZakahCompanyRecordRequest {
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
     private BigDecimal accruedExpenses;
+
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
     private BigDecimal shortTermLiability;
+
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
     private BigDecimal yearlyLongTermLiabilities;
+
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
-    private BigDecimal goldPrice;
+    private BigDecimal contraAssets;
+
+    @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
+    @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
+    private BigDecimal provisionsUnderLiabilities;
+
+
 }

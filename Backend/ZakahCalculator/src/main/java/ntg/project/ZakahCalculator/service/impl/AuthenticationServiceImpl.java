@@ -49,7 +49,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
+                        request.getEmail().toLowerCase(),
                         request.getPassword()
                 )
         );
@@ -70,7 +70,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Transactional
     public void register(RegistrationRequest request) {
 
-        if (userRepository.existsByEmail(request.getEmail())) {
+        if (userRepository.existsByEmail(request.getEmail().toLowerCase())) {
             throw new BusinessException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
 
@@ -95,7 +95,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Transactional
     public AuthenticationResponse verifyAccount(VerifyAccountRequest request) {
 
-        User user = getByEmail(request.getEmail());
+        User user = getByEmail(request.getEmail().toLowerCase());
 
         otpService.verifyOtp(user, request.getOtpCode(), OtpType.EMAIL_VERIFICATION);
 
@@ -130,7 +130,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Transactional
     public ForgetPasswordResponse forgetPassword(ForgetPasswordRequest request) {
 
-        User user = getByEmail(request.getEmail());
+        User user = getByEmail(request.getEmail().toLowerCase());
 
         otpService.sendOrResend(user.getEmail(), OtpType.PASSWORD_RESET);
 
@@ -143,7 +143,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Transactional
     public VerifyPasswordOtpResponse verifyPasswordOtp(VerifyOtpRequest request) {
 
-        User user = getByEmail(request.getEmail());
+        User user = getByEmail(request.getEmail().toLowerCase());
 
         return otpService.verifyPasswordResetOtp(user, request.getOtp());
     }
@@ -174,12 +174,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public void resendAccountVerificationOtp(ResendOtpRequest request) {
-        otpService.sendOrResend(request.getEmail(), OtpType.EMAIL_VERIFICATION);
+        otpService.sendOrResend(request.getEmail().toLowerCase(), OtpType.EMAIL_VERIFICATION);
     }
 
     @Override
     public void resendPasswordVerificationOtp(ResendOtpRequest request) {
-        otpService.sendOrResend(request.getEmail(), OtpType.PASSWORD_RESET);
+        otpService.sendOrResend(request.getEmail().toLowerCase(), OtpType.PASSWORD_RESET);
     }
 
     /* ================= HELPERS ================= */

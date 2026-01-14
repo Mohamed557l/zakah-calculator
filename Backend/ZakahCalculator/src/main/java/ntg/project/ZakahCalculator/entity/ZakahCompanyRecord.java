@@ -20,6 +20,9 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class ZakahCompanyRecord extends ZakahRecord {
+    //Items from Income Statment
+    @Column(precision = 15, scale = 2)
+    private BigDecimal netProfit;
 
     // Assets
     @Column(name = "cash_equivalents", precision = 15, scale = 2)
@@ -34,6 +37,9 @@ public class ZakahCompanyRecord extends ZakahRecord {
     @Column(precision = 15, scale = 2)
     private BigDecimal investment; // "الاستثمارات طويلة الأجل (أسهم، سندات، شركات تابعة)"
 
+    @Column(precision = 15, scale = 2)
+    private BigDecimal generatingFixedAssets;
+
     // Liabilities
     @Column(name = "accounts_payable", precision = 15, scale = 2)
     private BigDecimal accountsPayable; // "الذمم الدائنة (مستحقات للموردين)"
@@ -47,6 +53,12 @@ public class ZakahCompanyRecord extends ZakahRecord {
     // yearly_portion_of_long_term_liabilities
     @Column(name = "yearly_long_term_liabilities", precision = 15, scale = 2)
     private BigDecimal yearlyLongTermLiabilities; // "حصَّة السنة من الالتزامات طويلة الأجل"
+
+    @Column(precision = 15, scale = 2)
+    private BigDecimal contraAssets;
+
+    @Column(precision = 15, scale = 2)
+    private BigDecimal provisionsUnderLiabilities;
 
     // Balance sheet Data
     @Column(name = "balance_sheet_date")

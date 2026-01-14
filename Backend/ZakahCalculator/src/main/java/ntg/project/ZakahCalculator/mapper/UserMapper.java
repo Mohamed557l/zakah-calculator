@@ -17,7 +17,7 @@ public class UserMapper {
         if (request == null) return null;
         User user = new User();
         user.setName(request.getFullName());
-        user.setEmail(request.getEmail());
+        user.setEmail(request.getEmail().toLowerCase());
         user.setPassword(request.getPassword());
         user.setRoles(Collections.emptyList());
         user.setVerified(false);

@@ -52,7 +52,8 @@ public class ZakahCompanyRecordServiceImpl implements ZakahCompanyRecordService 
         // ===== Calculations =====
         BigDecimal totalAssets = calculateTotalAssets(request);
         BigDecimal totalLiabilities = calculateTotalLiabilities(request);
-        BigDecimal zakahPool = totalAssets.subtract(totalLiabilities);
+        BigDecimal netProfit = calculateNetProfit(request);
+        BigDecimal zakahPool = totalAssets.add(netProfit).subtract(totalLiabilities);
 
         if (zakahPool.compareTo(BigDecimal.ZERO) < 0) {
             throw new BusinessException(NEGATIVE_ZAKAH_POOL);
@@ -202,14 +203,21 @@ public class ZakahCompanyRecordServiceImpl implements ZakahCompanyRecordService 
         return zero(r.getCashEquivalents())
                 .add(zero(r.getAccountsReceivable()))
                 .add(zero(r.getInventory()))
-                .add(zero(r.getInvestment()));
+                .add(zero(r.getInvestment()))
+                .add(zero(r.getGeneratingFixedAssets()));
     }
 
     private BigDecimal calculateTotalLiabilities(ZakahCompanyRecordRequest r) {
         return zero(r.getAccountsPayable())
                 .add(zero(r.getShortTermLiability()))
                 .add(zero(r.getAccruedExpenses()))
-                .add(zero(r.getYearlyLongTermLiabilities()));
+                .add(zero(r.getYearlyLongTermLiabilities()))
+                .add(zero(r.getContraAssets()))
+                .add(zero(r.getProvisionsUnderLiabilities()));
+
+    }
+    private BigDecimal calculateNetProfit(ZakahCompanyRecordRequest r){
+        return  zero(r.getNetProfit());
     }
 
     private BigDecimal zero(BigDecimal v) {
