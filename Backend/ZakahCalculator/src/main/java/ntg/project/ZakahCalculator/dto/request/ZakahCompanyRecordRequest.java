@@ -24,7 +24,7 @@ public class ZakahCompanyRecordRequest {
     //Income Statment Items
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
-    private BigDecimal netProfit;
+    private BigDecimal netProfit;//new item
 
     //Assets
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
@@ -45,7 +45,7 @@ public class ZakahCompanyRecordRequest {
 
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
-    private BigDecimal generatingFixedAssets;
+    private BigDecimal generatingFixedAssets;//new item
 
     //Liabilities
 
@@ -67,11 +67,11 @@ public class ZakahCompanyRecordRequest {
 
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
-    private BigDecimal contraAssets;
+    private BigDecimal contraAssets; //new item
 
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
-    private BigDecimal provisionsUnderLiabilities;
+    private BigDecimal provisionsUnderLiabilities;//new item
 
 
 }

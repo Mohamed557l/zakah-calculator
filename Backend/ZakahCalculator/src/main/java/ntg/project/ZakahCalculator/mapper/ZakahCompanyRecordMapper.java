@@ -22,6 +22,7 @@ public class ZakahCompanyRecordMapper {
         record.setAccountsReceivable(request.getAccountsReceivable());
         record.setInventory(request.getInventory());
         record.setInvestment(request.getInvestment());
+        record.setGeneratingFixedAssets(request.getGeneratingFixedAssets());
 
         // Liabilities
         record.setAccountsPayable(request.getAccountsPayable());
@@ -30,9 +31,12 @@ public class ZakahCompanyRecordMapper {
         record.setYearlyLongTermLiabilities(
                 request.getYearlyLongTermLiabilities()
         );
+        record.setContraAssets(request.getContraAssets());
+        record.setProvisionsUnderLiabilities(request.getProvisionsUnderLiabilities());
         record.setGoldPrice(request.getGoldPrice());
         record.setUser(user);
-
+        //net income
+        record.setNetProfit(request.getNetProfit());
         return record;
     }
 
@@ -57,10 +61,14 @@ public class ZakahCompanyRecordMapper {
                 .accountsReceivable(entity.getAccountsReceivable())
                 .inventory(entity.getInventory())
                 .investment(entity.getInvestment())
+                .generatingFixedAssets(entity.getGeneratingFixedAssets())
                 .accountsPayable(entity.getAccountsPayable())
                 .shortTermLiability(entity.getShortTermLiability())
                 .accruedExpenses(entity.getAccruedExpenses())
                 .yearlyLongTermLiabilities(entity.getYearlyLongTermLiabilities())
+                .contraAssets(entity.getContraAssets())
+                .provisionsUnderLiabilities(entity.getProvisionsUnderLiabilities())
+                .netProfit(entity.getNetProfit())
                 .goldPrice(entity.getGoldPrice())
                 .balanceSheetDate(entity.getBalanceSheetDate())
                 .totalAssets(entity.getTotalAssets())
