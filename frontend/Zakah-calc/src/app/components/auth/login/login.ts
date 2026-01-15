@@ -7,11 +7,12 @@ import { AuthService } from '../../../services/auth-service/auth.service';
 import { AuthenticationRequest } from '../../../models/request/IAuthRequest';
 import * as CryptoJS from 'crypto-js';
 import {environment} from '../../../../environments/environment';
+import { LeftSectionViewComponent } from "../left-section-view/left-section-view.component";
 
 @Component({
   selector: 'app-login',
   standalone: true, 
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, LeftSectionViewComponent],
   templateUrl: './login.html'
 })
 export class Login implements OnInit {

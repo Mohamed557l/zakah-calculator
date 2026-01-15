@@ -47,7 +47,11 @@ export class ZakahCompanyRecordService {
       accruedExpenses: data.accruedExpenses,
       shortTermLiability: data.shortTermLiability,
       yearlyLongTermLiabilities: data.yearlyLongTermLiabilities,
-      goldPrice: data.goldPrice
+      goldPrice: data.goldPrice,
+      netProfit: data.netProfit,
+      generatingFixedAssets: data.generatingFixedAssets,
+      contraAssets: data.contraAssets,
+      provisionsUnderLiabilities: data.provisionsUnderLiabilities
     };
 
     return this.http.post<ZakahCompanyRecordResponse>(`${this.BASE_URL}/calculate`, request)
@@ -63,15 +67,19 @@ export class ZakahCompanyRecordService {
   private getInitialFormData(): ZakahCompanyRecordRequest {
     return {
   balanceSheetDate: new Date().toISOString().split('T')[0],
+  goldPrice: 0,
+  netProfit: 0,
   cashEquivalents: 0,
-  investment: 0,
-  inventory: 0,
   accountsReceivable: 0,
+  inventory: 0,
+  investment: 0,
+  generatingFixedAssets: 0,
   accountsPayable: 0,
   accruedExpenses: 0,
   shortTermLiability: 0,
   yearlyLongTermLiabilities: 0,
-  goldPrice: 0
+  contraAssets: 0,
+  provisionsUnderLiabilities: 0
 };
   }
 

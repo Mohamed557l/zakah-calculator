@@ -9,11 +9,12 @@ import { AuthService } from '../../../services/auth-service/auth.service';
 import { VerifyAccountRequest } from '../../../models/request/IAuthRequest';
 import {environment} from '../../../../environments/environment';
 import * as CryptoJS from 'crypto-js';
+import { LeftSectionViewComponent } from "../left-section-view/left-section-view.component";
 
 @Component({
   selector: 'app-verify-otp',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, LeftSectionViewComponent],
   templateUrl: './verify-otp-account.component.html',
   styleUrls: ['./verify-otp-account.component.css']
 })

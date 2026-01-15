@@ -8,11 +8,12 @@ import { AuthService } from '../../../services/auth-service/auth.service';
 import { VerifyOtpRequest } from '../../../models/request/IAuthRequest';
 import { environment } from '../../../../environments/environment';
 import { CommonModule } from '@angular/common';
+import { LeftSectionViewComponent } from "../left-section-view/left-section-view.component";
 
 @Component({
   selector: 'app-verify-password-otp',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, LeftSectionViewComponent],
   templateUrl: './verify-password-otp.component.html',
   styleUrls: ['./verify-password-otp.component.css']
 })

@@ -41,7 +41,11 @@ export class ZakahCompanyExcelService {
             accruedExpenses: this.toNumber(firstRow['Accrued Expenses']),
             shortTermLiability: this.toNumber(firstRow['Short Term Liability']),
             yearlyLongTermLiabilities: this.toNumber(firstRow['Yearly Long Term Liabilities']),
-            goldPrice: 75.21 // قيمة افتراضية
+            goldPrice: 75.21, // قيمة افتراضية
+            netProfit: this.toNumber(firstRow['Net Profit']),
+            generatingFixedAssets: this.toNumber(firstRow['Generating Fixed Assets']),
+            contraAssets: this.toNumber(firstRow['Contra Assets']),
+            provisionsUnderLiabilities: this.toNumber(firstRow['Provisions Under Liabilities'])
           };
 
           console.log('Excel data parsed (Request):', result);

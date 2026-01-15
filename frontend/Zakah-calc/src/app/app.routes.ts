@@ -91,7 +91,7 @@ export const routes: Routes = [
       {
         path: 'wizard',
         loadComponent: () =>
-          import('./components/company/wizard/wizard')
+          import('./components/company/wizards-company/wizard/wizard')
             .then(m => m.ZakahCompanyRecordComponent),
       },
       {

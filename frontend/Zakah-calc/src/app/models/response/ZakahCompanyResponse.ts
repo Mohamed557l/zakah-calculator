@@ -10,15 +10,19 @@ export interface ZakahCompanyRecordResponse {
   investment: number;
   inventory: number;
   accountsReceivable: number;
+  generatingFixedAssets: number;
 
   // Liabilities
   accountsPayable: number;
   accruedExpenses: number;
   shortTermLiability: number;
   yearlyLongTermLiabilities: number;
+  contraAssets: number;
+  provisionsUnderLiabilities: number;
 
   // Zakah Info
   goldPrice: number;
+  netProfit: number;
 
   // Calculations
   totalAssets: number;

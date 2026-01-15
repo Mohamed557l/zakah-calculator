@@ -5,10 +5,10 @@ import {
   signal
 } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { ZakahCompanyRecordService } from '../../../services/zakah-company-service/zakah-company-service';
-import { ZakahCompanyExcelService } from '../../../services/zakah-company-service/zakah-company-excel-service';
-import { TooltipComponent } from '../../../shared/tooltip/tooltip';
-import { ZakahCompanyRecordRequest } from '../../../models/request/ZakahCompanyRequest';
+import { ZakahCompanyRecordService } from '../../../../services/zakah-company-service/zakah-company-service';
+import { ZakahCompanyExcelService } from '../../../../services/zakah-company-service/zakah-company-excel-service';
+import { TooltipComponent } from '../../../../shared/tooltip/tooltip';
+import { ZakahCompanyRecordRequest } from '../../../../models/request/ZakahCompanyRequest';
 import { Router } from '@angular/router';
 
 @Component({
@@ -173,7 +173,11 @@ export class ZakahCompanyRecordComponent {
           goldPrice: excelData.goldPrice || 0,
           balanceSheetDate: excelData.balanceSheetDate 
             ? this.normalizeToISO(excelData.balanceSheetDate.toString()) 
-            : new Date().toISOString().split('T')[0]
+            : new Date().toISOString().split('T')[0],
+          netProfit: excelData.netProfit || 0,
+          generatingFixedAssets: excelData.generatingFixedAssets || 0,
+          contraAssets: excelData.contraAssets || 0,
+          provisionsUnderLiabilities: excelData.provisionsUnderLiabilities || 0
         });
 
         const detailsStep = this.steps().indexOf('التفاصيل');

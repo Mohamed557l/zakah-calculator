@@ -2,18 +2,22 @@
 export interface ZakahCompanyRecordRequest {
   balanceSheetDate: string;
 
+  // Zakah Info
+  goldPrice: number;
+  netProfit: number; // new item
+
   // Assets
   cashEquivalents: number;
-  investment: number;
-  inventory: number;
   accountsReceivable: number;
+  inventory: number;
+  investment: number;
+  generatingFixedAssets: number; // new item
 
   // Liabilities
   accountsPayable: number;
   accruedExpenses: number;
   shortTermLiability: number;
   yearlyLongTermLiabilities: number;
-
-  // Zakah Info
-  goldPrice: number;
+  contraAssets: number; // new item
+  provisionsUnderLiabilities: number; // new item
 }

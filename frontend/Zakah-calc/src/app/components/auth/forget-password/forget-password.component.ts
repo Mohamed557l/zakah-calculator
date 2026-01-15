@@ -6,11 +6,12 @@ import { ForgetPasswordRequest } from '../../../models/request/IAuthRequest';
 import * as CryptoJS from 'crypto-js';
 import { environment } from '../../../../environments/environment';
 import { CommonModule } from '@angular/common';
+import { LeftSectionViewComponent } from "../left-section-view/left-section-view.component";
 
 @Component({
   selector: 'app-forget-password',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, LeftSectionViewComponent],
   templateUrl: './forget-password.component.html',
   styleUrls: ['./forget-password.component.css']
 })

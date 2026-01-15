@@ -9,11 +9,12 @@ import { UserType } from '../../../models/enums/UserType';
 import { environment } from '../../../../environments/environment';
 import * as CryptoJS from 'crypto-js';
 import { validate } from '@angular/forms/signals';
+import { LeftSectionViewComponent } from "../left-section-view/left-section-view.component";
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, LeftSectionViewComponent],
   templateUrl: './register.html'
 })
 export class RegisterComponent implements OnInit {
@@ -21,6 +22,7 @@ export class RegisterComponent implements OnInit {
   secretKey = environment.secretKey;
 
   registerForm!: FormGroup;
+  items = ['software_company', 'Other'];
 
   // signal للحالة
   isLoading = signal(false);

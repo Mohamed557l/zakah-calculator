@@ -8,11 +8,12 @@ import { ResetPasswordRequest } from '../../../models/request/IAuthRequest';
 import { environment } from '../../../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { finalize } from 'rxjs';
+import { LeftSectionViewComponent } from "../left-section-view/left-section-view.component";
 
 @Component({
   selector: 'app-new-password',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, LeftSectionViewComponent],
   templateUrl: './new-password.component.html',
   styleUrls: ['./new-password.component.css']
 })
