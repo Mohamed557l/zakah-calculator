@@ -161,7 +161,7 @@ export class WizardSoftwareCompanyComponent implements OnInit {
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = 'balance_sheet_templete.xlsx';
+        link.download = 'software_balance_sheet_templete.xlsx';
         link.click();
         URL.revokeObjectURL(url);
       },
@@ -264,5 +264,34 @@ export class WizardSoftwareCompanyComponent implements OnInit {
 
     return dateStr;
   }
+
+  onNumberInput(event: Event) {
+  const input = event.target as HTMLInputElement;
+
+  let value = input.value;
+
+  // إزالة أي شيء غير رقم أو نقطة
+  value = value.replace(/[^0-9.]/g, '');
+
+  // منع أكثر من نقطة
+  const parts = value.split('.');
+  if (parts.length > 2) {
+    value = parts[0] + '.' + parts.slice(1).join('');
+  }
+
+  input.value = value;
+
+  this.zakahService.updateSoftwareFormData({
+    [input.name]: value === '' ? 0 : Number(value)
+  });
+}
+
+blockInvalidNumberKeys(event: KeyboardEvent) {
+  const invalidKeys = ['e', 'E', '+', '-'];
+  if (invalidKeys.includes(event.key)) {
+    event.preventDefault();
+  }
+}
+
 
 }

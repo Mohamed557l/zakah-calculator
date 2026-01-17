@@ -159,10 +159,12 @@
 
       <div class="space-y-4">
         <div class="form-group">
-          <label for="cashEquivalents" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">النقد و مشتملاته (Cash
+          <label for="cashEquivalents" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">النقد و
+            مشتملاته (Cash
             Equivalents) <app-tooltip text="يشمل النقد في الصندوق والحسابات البنكية."></app-tooltip></label>
-          <input type="number" name="cashEquivalents" [value]="formData().cashEquivalents" (input)="onInputChange($event)"
-            class="w-full p-3 bg-white border border-slate-300 rounded-lg" placeholder="0.00">
+          <input type="number" name="cashEquivalents" [value]="formData().cashEquivalents"
+            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg"
+            placeholder="0.00">
           @if (fieldErrors().cashEquivalents) {
           <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().cashEquivalents }}</p>
           }
@@ -189,11 +191,13 @@
 
         </div>
         <div class="form-group">
-          <label for="accountsReceivable" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">الحسابات المستحقة
+          <label for="accountsReceivable" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">الحسابات
+            المستحقة
             (ِAccounts Receivable) <app-tooltip
               text="الأموال المستحقة لشركتك أو لك والتي من المرجح تحصيلها."></app-tooltip></label>
-          <input type="number" name="accountsReceivable" [value]="formData().accountsReceivable" (input)="onInputChange($event)"
-            class="w-full p-3 bg-white border border-slate-300 rounded-lg" placeholder="0.00">
+          <input type="number" name="accountsReceivable" [value]="formData().accountsReceivable"
+            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg"
+            placeholder="0.00">
           @if (fieldErrors().accountsReceivable) {
           <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().accountsReceivable }}</p>
           }
@@ -206,49 +210,58 @@
       <h2 class="text-2xl font-bold text-slate-800 mb-6">التزاماتك</h2>
       <div class="space-y-4">
         <div class="form-group">
-          <label for="accountsPayable" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">الحسابات الدائنة
+          <label for="accountsPayable" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">الحسابات
+            الدائنة
             (Accounts Payable) <app-tooltip text="الأموال المستحقة على شركتك أو عليك للآخرين."></app-tooltip></label>
-          <input type="number" name="accountsPayable" [value]="formData().accountsPayable" (input)="onInputChange($event)"
-            class="w-full p-3 bg-white border border-slate-300 rounded-lg" placeholder="0.00">
+          <input type="number" name="accountsPayable" [value]="formData().accountsPayable"
+            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg"
+            placeholder="0.00">
           @if (fieldErrors().accountsPayable) {
           <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().accountsPayable }}</p>
           }
 
         </div>
         <div class="form-group">
-          <label for="accruedExpenses" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">المصروفات المستحقة
+          <label for="accruedExpenses" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">المصروفات
+            المستحقة
             (Accrued Expenses) <app-tooltip text="المصاريف التشغيلية المستحقة والواجب دفعها."></app-tooltip></label>
-          <input type="number" name="accruedExpenses" [value]="formData().accruedExpenses" (input)="onInputChange($event)"
-            class="w-full p-3 bg-white border border-slate-300 rounded-lg" placeholder="0.00">
+          <input type="number" name="accruedExpenses" [value]="formData().accruedExpenses"
+            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg"
+            placeholder="0.00">
           @if (fieldErrors().accruedExpenses) {
           <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().accruedExpenses }}</p>
-          } 
+          }
         </div>
         <div class="form-group">
-          <label for="shortTermLiability" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">الالتزام قصير
+          <label for="shortTermLiability" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">الالتزام
+            قصير
             الأجل (Short-term Liability) <app-tooltip
               text="القروض التي يجب سدادها خلال عام واحد."></app-tooltip></label>
-          <input type="number" name="shortTermLiability" [value]="formData().shortTermLiability" (input)="onInputChange($event)"
-            class="w-full p-3 bg-white border border-slate-300 rounded-lg" placeholder="0.00">
+          <input type="number" name="shortTermLiability" [value]="formData().shortTermLiability"
+            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg"
+            placeholder="0.00">
           @if (fieldErrors().shortTermLiability) {
           <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().shortTermLiability }}</p>
           }
         </div>
         <div class="form-group">
-          <label for="yearlyLongTermLiabilities" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">الالتزامات طويلة
+          <label for="yearlyLongTermLiabilities"
+            class="flex items-center gap-2 font-semibold text-slate-700 mb-2">الالتزامات طويلة
             الأجل الجزء السنوي ( Yearly Long-term Liabilities) <app-tooltip
               text="الجزء من الدين طويل الأجل المستحق خلال الـ 12 شهرًا القادمة."></app-tooltip></label>
-          <input type="number" name="yearlyLongTermLiabilities" [value]="formData().yearlyLongTermLiabilities" (input)="onInputChange($event)"
-            class="w-full p-3 bg-white border border-slate-300 rounded-lg " placeholder="0.00">
+          <input type="number" name="yearlyLongTermLiabilities" [value]="formData().yearlyLongTermLiabilities"
+            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg "
+            placeholder="0.00">
           @if (fieldErrors().yearlyLongTermLiabilities) {
-          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().yearlyLongTermLiabilities }}</p>
-          } 
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().yearlyLongTermLiabilities }}
+          </p>
+          }
         </div>
       </div>
       }
-      @case ('الالتزامات') {
+      @case ('صافي الربح') {
       <!-- Liabilities Step -->
-      <h2 class="text-2xl font-bold text-slate-800 mb-6">التزاماتك</h2>
+      <h2 class="text-2xl font-bold text-slate-800 mb-6">صافي الربح</h2>
       <div class="space-y-4">
         <div class="form-group">
           <label for="netprofit" class="flex items-center gap-2 font-semibold text-slate-700 mb-2"> صافي الربح
@@ -261,7 +274,7 @@
           }
 
         </div>
-       
+
       </div>
       }
       @case ('التفاصيل') {
@@ -276,9 +289,9 @@
           class="mt-1 block p-2 w-full rounded-md border-slate-300 shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-500 focus:ring-opacity-50 sm:text-sm bg-white border"
           [value]="getDisplayDate()"
           (input)="zakahService.updateFormData({ balanceSheetDate: $any($event.target).value })" />
-          @if (fieldErrors().balanceSheetDate) {
-          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().balanceSheetDate }}</p>
-          }
+        @if (fieldErrors().balanceSheetDate) {
+        <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().balanceSheetDate }}</p>
+        }
       </div>
 
       <h2 class="text-2xl font-bold text-slate-800 mb-6">سعر الذهب اليومي</h2>
@@ -289,9 +302,8 @@
             سعر الذهب الحالي للجرام (عيار 21)
             <app-tooltip text="أدخل السعر الحالي للذهب عيار 21 بالجنيه المصري للجرام الواحد."></app-tooltip>
           </label>
-          <input type="number" name="goldPrice" [value]="formData().goldPrice"
-            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg"
-            placeholder="75.21">
+          <input type="number" name="goldPrice" [value]="formData().goldPrice" (input)="onInputChange($event)"
+            class="w-full p-3 bg-white border border-slate-300 rounded-lg" placeholder="75.21">
           @if (fieldErrors().goldPrice) {
           <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().goldPrice }}</p>
           }
@@ -357,6 +369,7 @@
         </div>
       </div>
 
+
       <!-- الخصوم -->
       <div class="space-y-4 rounded-lg border border-slate-200 p-4 mt-4">
         <h3 class="font-bold text-lg text-red-700 border-b pb-2 mb-2">الالتزامات</h3>
@@ -383,9 +396,27 @@
             @if (formData().yearlyLongTermLiabilities > 0) {
             <div class="grid grid-cols-2 gap-1 py-3">
               <dt class="text-slate-600">الالتزامات طويلة الأجل الجزء السنوي (Yearly Long-term Liabilities)</dt>
-              <dd class="text-end font-medium text-slate-800">{{ formData().yearlyLongTermLiabilities | currency:'EGP' }}</dd>
+              <dd class="text-end font-medium text-slate-800">{{ formData().yearlyLongTermLiabilities | currency:'EGP'
+                }}</dd>
             </div>
             }
+          </dl>
+        </div>
+      </div>
+
+      <!-- صافي الربح -->
+      <div class="space-y-4 rounded-lg border border-slate-200 p-4">
+        <h3 class="font-bold text-lg text-yellow-700 border-b pb-2 mb-2">صافي الربح</h3>
+        <div class="flow-root">
+          <dl class="-my-3 divide-y divide-slate-100 text-sm">
+            @if (formData().netProfit > 0) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">صافي الربح
+                (Net Profit)</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().netProfit | currency:'EGP' }}</dd>
+            </div>
+            }
+
           </dl>
         </div>
       </div>

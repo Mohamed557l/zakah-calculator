@@ -28,4 +28,6 @@ export interface SoftwareCompanyModel {
   expensesAccrued: number;                    // المصروفات المستحقة
   balanceSheetDate: string;
   goldPrice: number;
+  netProfit: number;
+
 }

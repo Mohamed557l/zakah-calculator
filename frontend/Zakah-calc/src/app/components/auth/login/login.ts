@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, signal, ViewChild} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -6,30 +6,32 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth-service/auth.service';
 import { AuthenticationRequest } from '../../../models/request/IAuthRequest';
 import * as CryptoJS from 'crypto-js';
-import {environment} from '../../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import { LeftSectionViewComponent } from "../left-section-view/left-section-view.component";
 
 @Component({
   selector: 'app-login',
-  standalone: true, 
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink, LeftSectionViewComponent],
   templateUrl: './login.html'
 })
 export class Login implements OnInit {
- 
+
   secretKey: string = environment.secretKey;
   loginForm!: FormGroup;
   isLoading = signal(false);
   serverError = signal<string | null>(null);
+  showPassword = signal(false);
+
   @ViewChild('googleBtn', { static: true }) googleBtn!: ElementRef;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
- ngOnInit(): void {
+  ngOnInit(): void {
     this.loginForm = this.fb.group({
       email: [
         '',
@@ -51,8 +53,10 @@ export class Login implements OnInit {
       ]
     });
   }
- 
 
+  togglePassword() {
+    this.showPassword.set(!this.showPassword());
+  }
   get f() {
     return this.loginForm.controls;
   }

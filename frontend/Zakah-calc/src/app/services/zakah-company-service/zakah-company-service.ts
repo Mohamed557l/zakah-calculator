@@ -66,7 +66,8 @@ export class ZakahCompanyRecordService {
         netProfit: data.netProfit,
         generatingFixedAssets: data.generatingFixedAssets,
         contraAssets: data.contraAssets,
-        provisionsUnderLiabilities: data.provisionsUnderLiabilities
+        provisionsUnderLiabilities: data.provisionsUnderLiabilities,
+
       };
     } else if (this.companyType === 'ROLE_COMPANY_SOFTWARE') {
       const softwareData = this.formSoftwareData(); // 🔴 **تغيير مهم هنا**
@@ -86,7 +87,7 @@ export class ZakahCompanyRecordService {
         accruedExpenses: softwareData.expensesAccrued,
         shortTermLiability: softwareData.loansTermShort,
         yearlyLongTermLiabilities: softwareData.debtTermLongPortionCurrent,
-        netProfit: 0,
+        netProfit: softwareData.netProfit,
         generatingFixedAssets: softwareData.generatingFixedAssets,
         contraAssets: softwareData.assetsFixedProvisionDepreciation +
           softwareData.investmentsProvisionImpairment +
@@ -104,6 +105,7 @@ export class ZakahCompanyRecordService {
     return this.http.post<ZakahCompanyRecordResponse>(`${this.BASE_URL}/calculate`, request)
       .pipe(
         tap(response => {
+          console.log(response)
           this.latestResult.set(response);
           this.history.update(h => [response, ...h]);
           this.resetForm();
@@ -156,7 +158,8 @@ export class ZakahCompanyRecordService {
       debtTermLongPortionCurrent: 0,
       expensesAccrued: 0,
       balanceSheetDate: new Date().toISOString().split('T')[0],
-      goldPrice: 0
+      goldPrice: 0,
+      netProfit: 0
     }
   }
 

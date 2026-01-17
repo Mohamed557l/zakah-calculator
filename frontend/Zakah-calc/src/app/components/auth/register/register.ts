@@ -30,7 +30,7 @@ export class RegisterComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initForm();
@@ -39,12 +39,30 @@ export class RegisterComponent implements OnInit {
       this.isFormValid.set(this.registerForm.valid);
     });
   }
+  showPassword = signal(false);
+  showConfirmPassword = signal(false);
+
+ togglePassword() {
+  this.showPassword.set(!this.showPassword());
+}
+
+toggleConfirmPassword() {
+  this.showConfirmPassword.set(!this.showConfirmPassword());
+}
+
 
   private initForm() {
+    const emailPattern = /^[A-Za-z](?:[A-Za-z0-9_]+(?:\.[A-Za-z0-9_]+)*)@[A-Za-z0-9-]+(?:\.[A-Za-z]{2,})+$/;
+
     this.registerForm = this.fb.group(
       {
         name: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
-        email: ['', [Validators.required, Validators.email, Validators.minLength(5), Validators.maxLength(50)]],
+        email: ['', [
+          Validators.required,
+          Validators.pattern(emailPattern),
+          Validators.minLength(5),
+          Validators.maxLength(50)
+        ]],
         password: ['', [
           Validators.required,
           Validators.minLength(8),
@@ -60,6 +78,7 @@ export class RegisterComponent implements OnInit {
     this.isFormValid.set(this.registerForm.valid);
   }
 
+
   get f() {
     return this.registerForm.controls;
   }
@@ -72,7 +91,7 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-  selectCompanyType(type: 'company-software' | 'company-other') {
+  selectCompanyType(type: 'company-software' | 'company') {
     localStorage.setItem(this.COMPANY_TYPE_KEY, type);
   }
 
