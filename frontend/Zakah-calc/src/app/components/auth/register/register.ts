@@ -2,14 +2,13 @@ import { Component, OnInit, computed, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import * as CryptoJS from 'crypto-js';
 
 import { AuthService } from '../../../services/auth-service/auth.service';
 import { RegistrationRequest } from '../../../models/request/IAuthRequest';
 import { UserType } from '../../../models/enums/UserType';
 import { environment } from '../../../../environments/environment';
-import * as CryptoJS from 'crypto-js';
-import { validate } from '@angular/forms/signals';
-import { LeftSectionViewComponent } from "../left-section-view/left-section-view.component";
+import { LeftSectionViewComponent } from '../left-section-view/left-section-view.component';
 
 @Component({
   selector: 'app-register',
@@ -17,17 +16,14 @@ import { LeftSectionViewComponent } from "../left-section-view/left-section-view
   imports: [CommonModule, ReactiveFormsModule, RouterLink, LeftSectionViewComponent],
   templateUrl: './register.html'
 })
+
 export class RegisterComponent implements OnInit {
 
+  private readonly COMPANY_TYPE_KEY = 'company_type';
   secretKey = environment.secretKey;
 
   registerForm!: FormGroup;
-  items = ['software_company', 'Other'];
-
-  // signal للحالة
   isLoading = signal(false);
-
-  // signal لتفعيل/تعطيل الزر بناءً على صحة الفورم
   isFormValid = signal(false);
 
   constructor(
@@ -39,44 +35,30 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
 
-    // تحديث signal كل ما الفورم يتغير
     this.registerForm.valueChanges.subscribe(() => {
       this.isFormValid.set(this.registerForm.valid);
     });
   }
 
- private initForm() {
-  this.registerForm = this.fb.group(
-    {
-      name: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
+  private initForm() {
+    this.registerForm = this.fb.group(
+      {
+        name: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
+        email: ['', [Validators.required, Validators.email, Validators.minLength(5), Validators.maxLength(50)]],
+        password: ['', [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.maxLength(64),
+          Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W).*$/)
+        ]],
+        confirmPassword: ['', [Validators.required, Validators.minLength(8)]],
+        persona: ['individual', Validators.required]
+      },
+      { validators: this.passwordMatchValidator }
+    );
 
-      email: ['', [
-        Validators.required,
-        Validators.email,
-        Validators.minLength(5),
-        Validators.maxLength(50)
-      ]],
-
-      password: ['', [
-        Validators.required,
-        Validators.minLength(8),
-        Validators.maxLength(64),
-        Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W).*$/)
-      ]],
-
-      confirmPassword: ['', [
-        Validators.required,
-        Validators.minLength(8)
-      ]],
-
-      persona: ['individual', Validators.required]
-    },
-    { validators: this.passwordMatchValidator }
-  );
-
-  this.isFormValid.set(this.registerForm.valid);
-}
-
+    this.isFormValid.set(this.registerForm.valid);
+  }
 
   get f() {
     return this.registerForm.controls;
@@ -84,6 +66,18 @@ export class RegisterComponent implements OnInit {
 
   selectPersona(type: 'individual' | 'company') {
     this.registerForm.patchValue({ persona: type });
+
+    if (type !== 'company') {
+      localStorage.removeItem(this.COMPANY_TYPE_KEY);
+    }
+  }
+
+  selectCompanyType(type: 'company-software' | 'company-other') {
+    localStorage.setItem(this.COMPANY_TYPE_KEY, type);
+  }
+
+  getCompanyType(): string | null {
+    return localStorage.getItem(this.COMPANY_TYPE_KEY);
   }
 
   private passwordMatchValidator(group: FormGroup) {
@@ -94,7 +88,6 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     if (!this.isFormValid() || this.isLoading()) {
-      
       this.registerForm.markAllAsTouched();
       return;
     }
@@ -102,38 +95,43 @@ export class RegisterComponent implements OnInit {
     this.isLoading.set(true);
 
     const formValue = this.registerForm.value;
+    const companyType = this.getCompanyType();
+
+    let typeUser: UserType;
+
+    if (formValue.persona === 'individual') {
+      typeUser = UserType.ROLE_INDIVIDUAL;
+
+    } else {
+      typeUser = companyType === 'company-software'
+        ? UserType.ROLE_COMPANY_SOFTWARE
+        : UserType.ROLE_COMPANY;
+    }
 
     const request: RegistrationRequest = {
       fullName: formValue.name,
       email: formValue.email,
       password: formValue.password,
       confirmPassword: formValue.confirmPassword,
-      userType:
-        formValue.persona === 'individual'
-          ? UserType.ROLE_INDIVIDUAL
-          : UserType.ROLE_COMPANY
+      userType: typeUser
     };
 
     this.authService.register(request).subscribe({
       next: () => {
-        console.log('Form is valid, registration successful');
         const encryptedEmail = CryptoJS.AES.encrypt(request.email, this.secretKey).toString();
+        localStorage.removeItem(this.COMPANY_TYPE_KEY);
         this.router.navigate(['/verify-otp'], { queryParams: { email: encryptedEmail } });
       },
-      error: (err) => {
-        console.log('Form is invalid, registration failed');
+      error: () => {
         alert('فشل إنشاء الحساب');
-        console.error('Register failed', err);
         this.isLoading.set(false);
       },
-      complete: () => {
-        this.isLoading.set(false);
-      }
+      complete: () => this.isLoading.set(false)
     });
   }
 
-  // signal computed لمثال توضيحي: تقدر تستخدمه لعرض رسالة خطأ إذا كلمة المرور لا تتطابق
   passwordMismatch = computed(() =>
-    this.registerForm.get('password')?.value !== this.registerForm.get('confirmPassword')?.value
+    this.registerForm.get('password')?.value !==
+    this.registerForm.get('confirmPassword')?.value
   );
 }

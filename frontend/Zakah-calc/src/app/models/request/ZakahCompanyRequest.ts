@@ -21,3 +21,4 @@ export interface ZakahCompanyRecordRequest {
   contraAssets: number; // new item
   provisionsUnderLiabilities: number; // new item
 }
+ 

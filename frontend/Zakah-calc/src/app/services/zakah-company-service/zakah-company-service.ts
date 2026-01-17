@@ -5,6 +5,8 @@ import { environment } from '../../../environments/environment';
 import { ZakahCompanyRecordResponse } from '../../models/response/ZakahCompanyResponse';
 import { ZakahCompanyRecordRequest } from '../../models/request/ZakahCompanyRequest';
 import { ZakahCompanyExcelService } from './zakah-company-excel-service';
+import { AuthStorageService } from '../storage-service/StorageService';
+import { SoftwareCompanyModel } from '../../models/software-company-model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,13 +15,15 @@ export class ZakahCompanyRecordService {
 
   private readonly BASE_URL = `${environment.apiUrl}/zakah/company`;
   private excelService = inject(ZakahCompanyExcelService);
-
   formData = signal<ZakahCompanyRecordRequest>(this.getInitialFormData());
+  formSoftwareData = signal<SoftwareCompanyModel>(this.getInitialSoftwareFormData());
+
   latestResult = signal<ZakahCompanyRecordResponse | null>(null);
   history = signal<ZakahCompanyRecordResponse[]>([]);
   currentWizardStep = signal<number>(0);
-  wizardSteps = signal<string[]>(['البداية', 'الأصول', 'الالتزامات', 'التفاصيل', 'مراجعة']);
+  wizardSteps = signal<string[]>(['البداية', 'الأصول', 'الالتزامات', 'صافي الربح', 'التفاصيل', 'مراجعة']);
   isCalculating = signal<boolean>(false);
+  companyType = AuthStorageService.getUserType();
 
   constructor(private http: HttpClient) { }
 
@@ -35,24 +39,47 @@ export class ZakahCompanyRecordService {
     return from(this.excelService.readCompanyExcel(file));
   }
 
+
+
+
   calculate(): Observable<ZakahCompanyRecordResponse> {
     const data = this.formData();
-    const request: ZakahCompanyRecordRequest = {
-      balanceSheetDate: data.balanceSheetDate,
-      cashEquivalents: data.cashEquivalents,
-      investment: data.investment,
-      inventory: data.inventory,
-      accountsReceivable: data.accountsReceivable,
-      accountsPayable: data.accountsPayable,
-      accruedExpenses: data.accruedExpenses,
-      shortTermLiability: data.shortTermLiability,
-      yearlyLongTermLiabilities: data.yearlyLongTermLiabilities,
-      goldPrice: data.goldPrice,
-      netProfit: data.netProfit,
-      generatingFixedAssets: data.generatingFixedAssets,
-      contraAssets: data.contraAssets,
-      provisionsUnderLiabilities: data.provisionsUnderLiabilities
-    };
+    let request: ZakahCompanyRecordRequest = {} as ZakahCompanyRecordRequest;
+    if (this.companyType === 'ROLE_COMPANY') {
+      request = {
+        balanceSheetDate: data.balanceSheetDate,
+        cashEquivalents: data.cashEquivalents,
+        investment: data.investment,
+        inventory: data.inventory,
+        accountsReceivable: data.accountsReceivable,
+        accountsPayable: data.accountsPayable,
+        accruedExpenses: data.accruedExpenses,
+        shortTermLiability: data.shortTermLiability,
+        yearlyLongTermLiabilities: data.yearlyLongTermLiabilities,
+        goldPrice: data.goldPrice,
+        netProfit: data.netProfit,
+        generatingFixedAssets: data.generatingFixedAssets,
+        contraAssets: data.contraAssets,
+        provisionsUnderLiabilities: data.provisionsUnderLiabilities
+      };
+    } else if (this.companyType === 'ROLE_COMPANY_SOFTWARE') {
+      request = {
+        balanceSheetDate: this.formSoftwareData().balanceSheetDate,
+        cashEquivalents: this.formSoftwareData().handOnCash + this.formSoftwareData().accountsCurrentDepositsBank + this.formSoftwareData().depositsStatutory + this.formSoftwareData().partiesThirdWithDeposits,
+        investment: this.formSoftwareData().investmentsEquity + this.formSoftwareData().affiliatesSubsidiaries + this.formSoftwareData().investmentsSukukIslamic + this.formSoftwareData().securitiesTrading,
+        inventory: this.formSoftwareData().expensesContractPrepaid,
+        accountsReceivable: this.formSoftwareData().receivablesTrade + this.formSoftwareData().receivableNotes + this.formSoftwareData().incomeAccrued,
+        accountsPayable: this.formSoftwareData().payableAccounts + this.formSoftwareData().payableNotes,
+        accruedExpenses: this.formSoftwareData().expensesAccrued,
+        shortTermLiability: this.formSoftwareData().loansTermShort,
+        yearlyLongTermLiabilities: this.formSoftwareData().debtTermLongPortionCurrent,
+        netProfit: 0,
+        generatingFixedAssets: this.formSoftwareData().generatingFixedAssets,
+        contraAssets: this.formSoftwareData().assetsFixedProvisionDepreciation + this.formSoftwareData().investmentsProvisionImpairment + this.formSoftwareData().debtsDoubtfulAllowance + this.formSoftwareData().discountsCashProvision,
+        provisionsUnderLiabilities: this.formSoftwareData().provisionOverhaulMaintenance + this.formSoftwareData().assetsProvisionInsurance,
+        goldPrice: this.formSoftwareData().goldPrice,
+      };
+    }
 
     return this.http.post<ZakahCompanyRecordResponse>(`${this.BASE_URL}/calculate`, request)
       .pipe(
@@ -66,21 +93,51 @@ export class ZakahCompanyRecordService {
 
   private getInitialFormData(): ZakahCompanyRecordRequest {
     return {
-  balanceSheetDate: new Date().toISOString().split('T')[0],
-  goldPrice: 0,
-  netProfit: 0,
-  cashEquivalents: 0,
-  accountsReceivable: 0,
-  inventory: 0,
-  investment: 0,
-  generatingFixedAssets: 0,
-  accountsPayable: 0,
-  accruedExpenses: 0,
-  shortTermLiability: 0,
-  yearlyLongTermLiabilities: 0,
-  contraAssets: 0,
-  provisionsUnderLiabilities: 0
-};
+      balanceSheetDate: new Date().toISOString().split('T')[0],
+      goldPrice: 0,
+      netProfit: 0,
+      cashEquivalents: 0,
+      accountsReceivable: 0,
+      inventory: 0,
+      investment: 0,
+      generatingFixedAssets: 0,
+      accountsPayable: 0,
+      accruedExpenses: 0,
+      shortTermLiability: 0,
+      yearlyLongTermLiabilities: 0,
+      contraAssets: 0,
+      provisionsUnderLiabilities: 0
+    };
+  }
+  private getInitialSoftwareFormData(): SoftwareCompanyModel {
+    return {
+      generatingFixedAssets: 0,
+      investmentsEquity: 0,
+      affiliatesSubsidiaries: 0,
+      investmentsSukukIslamic: 0,
+      receivablesTrade: 0,
+      receivableNotes: 0,
+      incomeAccrued: 0,
+      expensesContractPrepaid: 0,
+      handOnCash: 0,
+      accountsCurrentDepositsBank: 0,
+      depositsStatutory: 0,
+      securitiesTrading: 0,
+      partiesThirdWithDeposits: 0,
+      assetsFixedProvisionDepreciation: 0,
+      provisionOverhaulMaintenance: 0,
+      assetsProvisionInsurance: 0,
+      investmentsProvisionImpairment: 0,
+      debtsDoubtfulAllowance: 0,
+      discountsCashProvision: 0,
+      payableAccounts: 0,
+      payableNotes: 0,
+      loansTermShort: 0,
+      debtTermLongPortionCurrent: 0,
+      expensesAccrued: 0,
+      balanceSheetDate: new Date().toISOString().split('T')[0],
+      goldPrice: 0
+    }
   }
 
 
@@ -116,7 +173,7 @@ export class ZakahCompanyRecordService {
   loadfullrecord(id: number): Observable<ZakahCompanyRecordResponse> {
     return this.http.get<ZakahCompanyRecordResponse>(`${this.BASE_URL}/${id}`);
   }
- 
+
   calculateAndSave(request: ZakahCompanyRecordRequest): Observable<ZakahCompanyRecordResponse> {
     return this.http.post<ZakahCompanyRecordResponse>(`${this.BASE_URL}/calculate`, request);
   }

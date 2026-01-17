@@ -1,5 +1,5 @@
 <!-- src/app/components/wizard/wizard.html -->
-<div class="flex flex-col items-center justify-start p-4 pt-10 sm:pt-16">
+<div class="flex flex-col items-center justify-start p-4 pt-10 sm:pt-20">
   <div class="w-full max-w-2xl">
     <!-- Stepper -->
     <div class="mb-8">
@@ -244,6 +244,24 @@
           <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().yearlyLongTermLiabilities }}</p>
           } 
         </div>
+      </div>
+      }
+      @case ('الالتزامات') {
+      <!-- Liabilities Step -->
+      <h2 class="text-2xl font-bold text-slate-800 mb-6">التزاماتك</h2>
+      <div class="space-y-4">
+        <div class="form-group">
+          <label for="netprofit" class="flex items-center gap-2 font-semibold text-slate-700 mb-2"> صافي الربح
+            (Net Profit)
+            <app-tooltip text="صافي الربح بعد خصم جميع المصروفات والضرائب."></app-tooltip></label>
+          <input type="number" name="netprofit" [value]="formData().netProfit" (input)="onInputChange($event)"
+            class="w-full p-3 bg-white border border-slate-300 rounded-lg" placeholder="0.00">
+          @if (fieldErrors().netProfit) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().netProfit }}</p>
+          }
+
+        </div>
+       
       </div>
       }
       @case ('التفاصيل') {

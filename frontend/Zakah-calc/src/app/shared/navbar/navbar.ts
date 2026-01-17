@@ -40,6 +40,8 @@ export class Navbar {
       this.router.navigate(['/individual/wizard']);
     }else if (this.type === UserType.ROLE_COMPANY){
       this.router.navigate(['/company/wizard']);
+    }else if (this.type === UserType.ROLE_COMPANY_SOFTWARE){
+      this.router.navigate(['/company/company-software/wizard']);
     }
   }
 
@@ -47,7 +49,7 @@ export class Navbar {
     this.isProfileMenuOpen.set(false);
     if(this.type === UserType.ROLE_INDIVIDUAL){
       this.router.navigate(['/individual/dashboard']);
-    }else if (this.type === UserType.ROLE_COMPANY){
+    }else if (this.type === UserType.ROLE_COMPANY || this.type === UserType.ROLE_COMPANY_SOFTWARE){
       this.router.navigate(['/company/dashboard']);
     }
   }

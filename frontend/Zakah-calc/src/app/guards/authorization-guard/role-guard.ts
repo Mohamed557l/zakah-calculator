@@ -5,7 +5,6 @@ import { UserType } from '../../models/enums/UserType';
 
 export const roleGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
-
   const userType = AuthStorageService.getUserType();
 
   if (!userType) {
@@ -15,12 +14,30 @@ export const roleGuard: CanActivateFn = (route, state) => {
 
   const url = state.url;
 
-  if (url.startsWith('/individual') && userType !== UserType.ROLE_INDIVIDUAL) {
+  /* ================= COMPANY SOFTWARE ================= */
+  if (
+    url.startsWith('/company/company-software') &&
+    userType !== UserType.ROLE_COMPANY_SOFTWARE
+  ) {
     router.navigate(['/intro']);
     return false;
   }
 
-  if (url.startsWith('/company') && userType !== UserType.ROLE_COMPANY) {
+  /* ================= COMPANY ================= */
+  if (
+    url.startsWith('/company') &&
+    userType !== UserType.ROLE_COMPANY &&
+    userType !== UserType.ROLE_COMPANY_SOFTWARE
+  ) {
+    router.navigate(['/intro']);
+    return false;
+  }
+
+  /* ================= INDIVIDUAL ================= */
+  if (
+    url.startsWith('/individual') &&
+    userType !== UserType.ROLE_INDIVIDUAL
+  ) {
     router.navigate(['/intro']);
     return false;
   }

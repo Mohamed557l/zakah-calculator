@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import * as CryptoJS from 'crypto-js';
 
-import {UserType} from '../../models/enums/UserType';
+import { UserType} from '../../models/enums/UserType';
 import {AuthenticationResponse, UserResponse} from '../../models/response/IAuthResponse';
 import {environment} from '../../../environments/environment';
 
@@ -151,6 +151,9 @@ export class AuthStorageService {
 
   static isCompany(): boolean {
     return this.getUserType() === UserType.ROLE_COMPANY;
+  }
+  static isSoftwareCompany(): boolean {
+    return this.getUserType() === UserType.ROLE_COMPANY_SOFTWARE;
   }
 
   static isLoggedIn(): boolean {

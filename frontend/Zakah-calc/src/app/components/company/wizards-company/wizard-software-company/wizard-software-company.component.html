@@ -1,3 +1,808 @@
-<p>
-  wizard-software-company works!
-</p>
+<!-- src/app/components/wizard/wizard.html -->
+<div class="flex flex-col items-center justify-start p-4 pt-10 sm:pt-20">
+  <div class="w-full max-w-2xl">
+    <!-- Stepper --> 
+    <div class="mb-8">
+      <div class="flex items-center">
+        @for (step of steps(); track step; let i = $index) {
+        <div class="flex items-center text-emerald-600 relative">
+          <div
+            class="rounded-full transition duration-500 ease-in-out h-12 w-12 flex items-center justify-center border-2"
+            [class.bg-emerald-600]="i <= currentStep()" [class.text-white]="i <= currentStep()"
+            [class.border-emerald-600]="i <= currentStep()" [class.border-slate-300]="i > currentStep()"
+            [class.text-slate-500]="i > currentStep()">
+            @if (i < currentStep()) { <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+              } @else {
+              <span>{{ i + 1 }}</span>
+              }
+          </div>
+          <div class="absolute top-0 -ms-10 text-center mt-16 w-32 text-xs font-medium uppercase"
+            [class.text-emerald-600]="i <= currentStep()" [class.text-slate-400]="i > currentStep()">
+            {{ step }}
+          </div>
+        </div>
+        @if (!$last) {
+        <div class="flex-auto border-t-2 transition duration-500 ease-in-out"
+          [class.border-emerald-600]="i < currentStep()" [class.border-slate-300]="i >= currentStep()">
+        </div>
+        }
+        }
+      </div>
+    </div>
+
+    <!-- Step Content -->
+    <div class="bg-white rounded-xl shadow-lg p-6 sm:p-8 animate-slide-in-right">
+      @switch (steps()[currentStep()]) {
+      @case ('البداية') {
+      <h2 class="text-2xl font-bold text-slate-800 mb-2">كيف تود البدء؟</h2>
+      <p class="text-slate-500 mb-6">اختر الطريقة التي تفضلها لإدخال بياناتك المالية.</p>
+
+      <div class="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+        <div class="flex items-start">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2 mt-0.5 shrink-0" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p class="text-sm text-blue-700">قم بتحميل نموذج Excel واملأ بياناتك المالية ثم ارفع الملف لحساب الزكاة
+            تلقائياً.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+        <!-- Manual Entry -->
+        <button (click)="next()"
+          class="group border-2 border-slate-200 rounded-lg p-6 text-center transition-all duration-300 hover:border-emerald-500 hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-400">
+          <div
+            class="shrink-0 w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto transition-all duration-300 group-hover:scale-110">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-slate-800 mt-4">إدخال يدوي</h3>
+          <p class="text-slate-500 text-sm mt-1">أدخل بياناتك المالية خطوة بخطوة</p>
+        </button>
+
+        <!-- Excel Upload -->
+        <div
+          class="group border-2 border-slate-200 rounded-lg p-6 text-center transition-all duration-300 hover:border-blue-500 hover:bg-blue-50 flex flex-col items-center justify-center">
+          <div
+            class=" shrink-0 w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto transition-all duration-300 group-hover:scale-110">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-slate-800 mt-4">رفع ملف إكسل</h3>
+          <p class="text-slate-500 text-sm mt-1">قم برفع ملف Excel وسنملأ البيانات تلقائياً</p>
+
+          <!-- زر تحميل النموذج -->
+          <div class="w-full mt-4">
+            <button (click)="downloadExcelTemplate()" [disabled]="downloadInProgress()"
+              class="w-full mb-3 px-4 py-2 bg-emerald-500 text-white font-semibold rounded-lg hover:bg-emerald-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center">
+              @if (downloadInProgress()) {
+              <svg class="animate-spin h-4 w-4 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                </path>
+              </svg>
+              جاري التحميل...
+              } @else {
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              تحميل نموذج Excel
+              }
+            </button>
+          </div>
+
+          <!-- حقل رفع الملف -->
+          <div class="w-full">
+            <input type="file" id="excel-upload" (change)="onFileChange($event)" class="hidden"
+              accept=".xlsx, .xls, .csv">
+            <label for="excel-upload"
+              class="block w-full px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-center items-center justify-center">
+              @if (isLoading()) {
+              <span class="flex items-center">
+                <svg class="animate-spin h-4 w-4 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                  </path>
+                </svg>
+                جاري المعالجة...
+              </span>
+              } @else {
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
+              </svg>
+              اختر ملف Excel
+              }
+            </label>
+          </div>
+
+          @if (fileName()) {
+          <div class="mt-3 p-2 bg-blue-50 rounded-lg border border-blue-200">
+            <p class="text-sm text-blue-700 font-medium">تم رفع الملف:</p>
+            <p class="text-sm text-blue-600 truncate max-w-xs">{{ fileName() }}</p>
+          </div>
+          }
+
+          @if (errorMessage()) {
+          <div class="mt-3 p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-200">
+            <div class="flex items-start">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 shrink-0" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>{{ errorMessage() }}</span>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+      }
+      @case ('الأصول') {
+
+      <h2 class="text-2xl font-bold text-slate-800 mb-6">أصولك</h2>
+      <div class="space-y-4">
+
+        <!-- الموجودات الثابتة الدائرة للدخل -->
+        <div class="form-group">
+          <label for="generatingFixedAssets" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">
+            الموجودات الثابتة الدائرة للدخل
+            <app-tooltip text="تمثل أصول لتوليد دخل مستمر مثل تأجير سيرفرات."></app-tooltip>
+          </label>
+          <input type="number" name="generatingFixedAssets" [value]="formData().generatingFixedAssets"
+            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg"
+            placeholder="0.00">
+          @if (fieldErrors().generatingFixedAssets) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().generatingFixedAssets }}</p>
+          }
+        </div>
+
+        <!-- الاستثمارات في الأسهم -->
+        <div class="form-group">
+          <label for="investmentsEquity" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">
+            الاستثمارات في الأسهم
+            <app-tooltip text="تشمل حصصاً في أسهم شركات أخرى بغرض التجارة أو الربح السريع."></app-tooltip>
+          </label>
+          <input type="number" name="investmentsEquity" [value]="formData().investmentsEquity"
+            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg"
+            placeholder="0.00">
+          @if (fieldErrors().investmentsEquity) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().investmentsEquity }}</p>
+          }
+        </div>
+
+        <!-- الاستثمارات في الشركات التابعة/الزميلة -->
+        <div class="form-group">
+          <label for="affiliatesSubsidiaries" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">
+            الاستثمارات في الشركات التابعة/الزميلة
+            <app-tooltip text="تمثل استثمارات في شركات مرتبطة جزئياً لتوسيع الأعمال."></app-tooltip>
+          </label>
+          <input type="number" name="affiliatesSubsidiaries" [value]="formData().affiliatesSubsidiaries"
+            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg"
+            placeholder="0.00">
+          @if (fieldErrors().affiliatesSubsidiaries) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().affiliatesSubsidiaries }}</p>
+          }
+        </div>
+
+        <!-- صكوك الاستثمار الإسلامية -->
+        <div class="form-group">
+          <label for="investmentsSukukIslamic" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">
+            صكوك الاستثمار الإسلامية
+            <app-tooltip text="أدوات استثمارية حاللة تُعامل كأصول دارة للنماء."></app-tooltip>
+          </label>
+          <input type="number" name="investmentsSukukIslamic" [value]="formData().investmentsSukukIslamic"
+            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg"
+            placeholder="0.00">
+          @if (fieldErrors().investmentsSukukIslamic) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().investmentsSukukIslamic }}</p>
+          }
+        </div>
+
+        <!-- المدينون -->
+        <div class="form-group">
+          <label for="receivablesTrade" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">
+            المدينون
+            <app-tooltip text="ديون مستحقة على العملاء من خدمات البرمجة أو الاشتراكات."></app-tooltip>
+          </label>
+          <input type="number" name="receivablesTrade" [value]="formData().receivablesTrade"
+            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg"
+            placeholder="0.00">
+          @if (fieldErrors().receivablesTrade) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().receivablesTrade }}</p>
+          }
+        </div>
+
+        <!-- أوراق القبض -->
+        <div class="form-group">
+          <label for="receivableNotes" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">
+            أوراق القبض
+            <app-tooltip text="وثائق دفع مؤجلة من عملاء لعقود طويلة الأجل."></app-tooltip>
+          </label>
+          <input type="number" name="receivableNotes" [value]="formData().receivableNotes"
+            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg"
+            placeholder="0.00">
+          @if (fieldErrors().receivableNotes) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().receivableNotes }}</p>
+          }
+        </div>
+
+        <!-- الإيرادات المستحقة -->
+        <div class="form-group">
+          <label for="incomeAccrued" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">
+            الإيرادات المستحقة
+            <app-tooltip text="إيرادات متراكمة غير مدفوعة بعد مثل فواتير اشتراكات شهرية."></app-tooltip>
+          </label>
+          <input type="number" name="incomeAccrued" [value]="formData().incomeAccrued" (input)="onInputChange($event)"
+            class="w-full p-3 bg-white border border-slate-300 rounded-lg" placeholder="0.00">
+          @if (fieldErrors().incomeAccrued) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().incomeAccrued }}</p>
+          }
+        </div>
+
+        <!-- المبالغ المدفوعة مقدماً عن العقود -->
+        <div class="form-group">
+          <label for="expensesContractPrepaid" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">
+            المبالغ المدفوعة مقدماً عن العقود
+            <app-tooltip text="دفعات مقدمة لموردي أدوات تطوير تدخل إذا مرتبطة بأصول زكوية."></app-tooltip>
+          </label>
+          <input type="number" name="expensesContractPrepaid" [value]="formData().expensesContractPrepaid"
+            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg"
+            placeholder="0.00">
+          @if (fieldErrors().expensesContractPrepaid) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().expensesContractPrepaid }}</p>
+          }
+        </div>
+
+        <!-- النقدية في الصندوق -->
+        <div class="form-group">
+          <label for="handOnCash" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">
+            النقدية في الصندوق
+            <app-tooltip text="النقد المتاح فوراً."></app-tooltip>
+          </label>
+          <input type="number" name="handOnCash" [value]="formData().handOnCash" (input)="onInputChange($event)"
+            class="w-full p-3 bg-white border border-slate-300 rounded-lg" placeholder="0.00">
+          @if (fieldErrors().handOnCash) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().handOnCash }}</p>
+          }
+        </div>
+
+        <!-- الودائع والحسابات الجارية لدى البنوك -->
+        <div class="form-group">
+          <label for="accountsCurrentDepositsBank" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">
+            الودائع والحسابات الجارية لدى البنوك
+            <app-tooltip text="حسابات بنكية جارية تستخدم للإيرادات والنفقات."></app-tooltip>
+          </label>
+          <input type="number" name="accountsCurrentDepositsBank" [value]="formData().accountsCurrentDepositsBank"
+            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg"
+            placeholder="0.00">
+          @if (fieldErrors().accountsCurrentDepositsBank) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().accountsCurrentDepositsBank }}
+          </p>
+          }
+        </div>
+
+        <!-- الوديعة القانونية -->
+        <div class="form-group">
+          <label for="depositsStatutory" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">
+            الوديعة القانونية
+            <app-tooltip text="ودائع مطلوبة قانونياً."></app-tooltip>
+          </label>
+          <input type="number" name="depositsStatutory" [value]="formData().depositsStatutory"
+            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg"
+            placeholder="0.00">
+          @if (fieldErrors().depositsStatutory) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().depositsStatutory }}</p>
+          }
+        </div>
+
+        <!-- الاستثمارات في الأسهم بغرض المتاجرة -->
+        <div class="form-group">
+          <label for="securitiesTrading" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">
+            الاستثمارات في الأسهم بغرض المتاجرة
+            <app-tooltip text="أسهم قصيرة الأجل للربح من التداول اليومي."></app-tooltip>
+          </label>
+          <input type="number" name="securitiesTrading" [value]="formData().securitiesTrading"
+            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg"
+            placeholder="0.00">
+          @if (fieldErrors().securitiesTrading) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().securitiesTrading }}</p>
+          }
+        </div>
+
+        <!-- التأمينات لدى الغير -->
+        <div class="form-group">
+          <label for="partiesThirdWithDeposits" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">
+            التأمينات لدى الغير
+            <app-tooltip text="تأمينات محتفظ بها لدى جهات خارجية لعقود الخدمات."></app-tooltip>
+          </label>
+          <input type="number" name="partiesThirdWithDeposits" [value]="formData().partiesThirdWithDeposits"
+            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg"
+            placeholder="0.00">
+          @if (fieldErrors().partiesThirdWithDeposits) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().partiesThirdWithDeposits }}</p>
+          }
+        </div>
+
+
+      </div>
+      }
+      @case ('الالتزامات') {
+      <!-- Liabilities Step -->
+      <h2 class="text-2xl font-bold text-slate-800 mb-6">التزاماتك</h2>
+      <div class="space-y-4">
+
+        <!-- مخصص استهلاك الموجودات الثابتة -->
+        <div class="form-group">
+          <label for="assetsFixedProvisionDepreciation"
+            class="flex items-center gap-2 font-semibold text-slate-700 mb-2">
+            مخصص استهلاك الموجودات الثابتة
+            <app-tooltip text="احتياطي الاستهلاك للمعدات مثل الحواسيب يُخصم من الأصول الثابتة."></app-tooltip>
+          </label>
+          <input type="number" name="assetsFixedProvisionDepreciation"
+            [value]="formData().assetsFixedProvisionDepreciation" (input)="onInputChange($event)"
+            class="w-full p-3 bg-white border border-slate-300 rounded-lg" placeholder="0.00">
+          @if (fieldErrors().assetsFixedProvisionDepreciation) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{
+            fieldErrors().assetsFixedProvisionDepreciation }}</p>
+          }
+        </div>
+
+        <!-- مخصص الصيانة أو العمرة -->
+        <div class="form-group">
+          <label for="provisionOverhaulMaintenance" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">
+            مخصص الصيانة أو العمرة
+            <app-tooltip text="احتياطي لصيانة الأصول الثابتة مثل السيرفرات يقلل القيمة الزكوية."></app-tooltip>
+          </label>
+          <input type="number" name="provisionOverhaulMaintenance" [value]="formData().provisionOverhaulMaintenance"
+            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg"
+            placeholder="0.00">
+          @if (fieldErrors().provisionOverhaulMaintenance) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().provisionOverhaulMaintenance }}
+          </p>
+          }
+        </div>
+
+        <!-- مخصص التأمين على الموجودات -->
+        <div class="form-group">
+          <label for="assetsProvisionInsurance" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">
+            مخصص التأمين على الموجودات
+            <app-tooltip text="احتياطي لتأمين الأصول ضد المخاطر يُطرح من الوعاء الزكوي."></app-tooltip>
+          </label>
+          <input type="number" name="assetsProvisionInsurance" [value]="formData().assetsProvisionInsurance"
+            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg"
+            placeholder="0.00">
+          @if (fieldErrors().assetsProvisionInsurance) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().assetsProvisionInsurance }}</p>
+          }
+        </div>
+
+        <!-- مخصص هبوط قيمة الاستثمارات -->
+        <div class="form-group">
+          <label for="investmentsProvisionImpairment" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">
+            مخصص هبوط قيمة الاستثمارات
+            <app-tooltip text="احتياطي انخفاض قيمة الاستثمارات يُخصم لضمان التقييم الدقيق."></app-tooltip>
+          </label>
+          <input type="number" name="investmentsProvisionImpairment" [value]="formData().investmentsProvisionImpairment"
+            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg"
+            placeholder="0.00">
+          @if (fieldErrors().investmentsProvisionImpairment) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().investmentsProvisionImpairment
+            }}</p>
+          }
+        </div>
+
+        <!-- مخصص الديون المشكوك في تحصيلها -->
+        <div class="form-group">
+          <label for="debtsDoubtfulAllowance" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">
+            مخصص الديون المشكوك في تحصيلها
+            <app-tooltip text="احتياطي للديون غير المضمونة التحصيل يقلل من المدينين."></app-tooltip>
+          </label>
+          <input type="number" name="debtsDoubtfulAllowance" [value]="formData().debtsDoubtfulAllowance"
+            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg"
+            placeholder="0.00">
+          @if (fieldErrors().debtsDoubtfulAllowance) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().debtsDoubtfulAllowance }}</p>
+          }
+        </div>
+
+        <!-- مخصص الخصم النقدي -->
+        <div class="form-group">
+          <label for="discountsCashProvision" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">
+            مخصص الخصم النقدي
+            <app-tooltip text="احتياطي لخصومات الدفع النقدي يُطرح من الإيرادات المستحقة."></app-tooltip>
+          </label>
+          <input type="number" name="discountsCashProvision" [value]="formData().discountsCashProvision"
+            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg"
+            placeholder="0.00">
+          @if (fieldErrors().discountsCashProvision) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().discountsCashProvision }}</p>
+          }
+        </div>
+
+        <!-- الدائنون -->
+        <div class="form-group">
+          <label for="payableAccounts" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">
+            الدائنون
+            <app-tooltip text="ديون مستحقة على الموردين لأدوات أو خدمات خارجية."></app-tooltip>
+          </label>
+          <input type="number" name="payableAccounts" [value]="formData().payableAccounts"
+            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg"
+            placeholder="0.00">
+          @if (fieldErrors().payableAccounts) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().payableAccounts }}</p>
+          }
+        </div>
+
+        <!-- أوراق الدفع -->
+        <div class="form-group">
+          <label for="payableNotes" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">
+            أوراق الدفع
+            <app-tooltip text="وثائق دفع مؤجلة لقروض أو التزامات قصيرة."></app-tooltip>
+          </label>
+          <input type="number" name="payableNotes" [value]="formData().payableNotes" (input)="onInputChange($event)"
+            class="w-full p-3 bg-white border border-slate-300 rounded-lg" placeholder="0.00">
+          @if (fieldErrors().payableNotes) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().payableNotes }}</p>
+          }
+        </div>
+
+        <!-- القروض القصيرة الأجل -->
+        <div class="form-group">
+          <label for="loansTermShort" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">
+            القروض القصيرة الأجل
+            <app-tooltip text="قروض بنكية قصيرة لتمويل التطوير يُخصم من الصافي."></app-tooltip>
+          </label>
+          <input type="number" name="loansTermShort" [value]="formData().loansTermShort" (input)="onInputChange($event)"
+            class="w-full p-3 bg-white border border-slate-300 rounded-lg" placeholder="0.00">
+          @if (fieldErrors().loansTermShort) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().loansTermShort }}</p>
+          }
+        </div>
+
+        <!-- القسط الواجب السداد من القروض الطويلة -->
+        <div class="form-group">
+          <label for="debtTermLongPortionCurrent" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">
+            القسط الواجب السداد من القروض الطويلة
+            <app-tooltip text="جزء مستحق من قروض طويلة يُطرح كالتزام جاري."></app-tooltip>
+          </label>
+          <input type="number" name="debtTermLongPortionCurrent" [value]="formData().debtTermLongPortionCurrent"
+            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg"
+            placeholder="0.00">
+          @if (fieldErrors().debtTermLongPortionCurrent) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().debtTermLongPortionCurrent }}
+          </p>
+          }
+        </div>
+
+        <!-- المصروفات المستحقة -->
+        <div class="form-group">
+          <label for="expensesAccrued" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">
+            المصروفات المستحقة
+            <app-tooltip text="مصروفات متراكمة مثل رواتب أو فواتير خدمات سحابية."></app-tooltip>
+          </label>
+          <input type="number" name="expensesAccrued" [value]="formData().expensesAccrued"
+            (input)="onInputChange($event)" class="w-full p-3 bg-white border border-slate-300 rounded-lg"
+            placeholder="0.00">
+          @if (fieldErrors().expensesAccrued) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().expensesAccrued }}</p>
+          }
+        </div>
+
+      </div>
+      }
+
+      @case ('التفاصيل') {
+      <h2 class="text-2xl font-bold text-slate-800 mb-2">تفاصيل الحساب</h2>
+      <p class="text-slate-500 mb-6">يرجى تقديم التاريخ الذي تحسب زكاتك عنه. غالبًا ما يكون هذا هو نهاية سنتك المالية.
+      </p>
+
+      <div class="mb-6">
+        <label for="balance-date" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">تاريخ الميزانية
+          العمومية</label>
+        <input id="balanceSheetDate" type="date"
+          class="mt-1 block p-2 w-full rounded-md border-slate-300 shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-500 focus:ring-opacity-50 sm:text-sm bg-white border"
+          [value]="getDisplayDate()"
+          (input)="zakahService.updateFormData({ balanceSheetDate: $any($event.target).value })" />
+        @if (fieldErrors().balanceSheetDate) {
+        <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().balanceSheetDate }}</p>
+        }
+      </div>
+
+      <h2 class="text-2xl font-bold text-slate-800 mb-6">سعر الذهب اليومي</h2>
+      <p class="text-slate-500 mb-4">يرجى إدخال سعر الذهب الحالي حيث أن تحديد الزكاة يعتمد على سعر 85 جرام ذهب</p>
+      <div class="space-y-6">
+        <div class="form-group">
+          <label for="goldPrice" class="flex items-center gap-2 font-semibold text-slate-700 mb-2">
+            سعر الذهب الحالي للجرام (عيار 21)
+            <app-tooltip text="أدخل السعر الحالي للذهب عيار 21 بالجنيه المصري للجرام الواحد."></app-tooltip>
+          </label>
+          <input type="number" name="goldPrice" [value]="formData().goldPrice" (input)="onInputChange($event)"
+            class="w-full p-3 bg-white border border-slate-300 rounded-lg" placeholder="75.21">
+          @if (fieldErrors().goldPrice) {
+          <p class="text-sm text-red-600 mt-1 bg-red-50 p-2 rounded-lg">{{ fieldErrors().goldPrice }}</p>
+          }
+        </div>
+      </div>
+      }
+      @case ('مراجعة') {
+      <!-- Review Step -->
+      <h2 class="text-2xl font-bold text-slate-800 mb-6">مراجعة حسابك</h2>
+
+      <!-- معلومات التاريخ وسعر الذهب -->
+      <div class="space-y-4 rounded-lg border border-slate-200 p-4 mb-6">
+        <h3 class="font-bold text-lg text-blue-700 border-b pb-2 mb-2">معلومات أساسية</h3>
+        <div class="flow-root">
+          <dl class="-my-3 divide-y divide-slate-100 text-sm">
+            @if (formData().balanceSheetDate) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">تاريخ الميزانية العمومية</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formatDateForDisplay(formData().balanceSheetDate) }}
+              </dd>
+            </div>
+            }
+            @if (formData().goldPrice > 0) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">سعر الذهب الحالي للجرام (عيار 21)</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().goldPrice | currency:'EGP' }}</dd>
+            </div>
+            }
+          </dl>
+        </div>
+      </div>
+
+      <!-- الأصول -->
+      <div class="space-y-4 rounded-lg border border-slate-200 p-4">
+        <h3 class="font-bold text-lg text-emerald-700 border-b pb-2 mb-2">الأصول</h3>
+        <div class="flow-root">
+          <dl class="-my-3 divide-y divide-slate-100 text-sm">
+            @if (formData().generatingFixedAssets) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">الأصول الثابتة المنتجة (Generating Fixed Assets)</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().generatingFixedAssets | currency:'EGP' }}
+              </dd>
+            </div>
+            }
+            @if (formData().expensesContractPrepaid > 0) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">المصروفات المدفوعة مقدماً (Expenses Contract Prepaid)</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().expensesContractPrepaid | currency:'EGP' }}
+              </dd>
+            </div>
+            }
+            @if (formData().investmentsEquity > 0) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">الاستثمارات في حقوق الملكية (Investments in Equity)</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().investmentsEquity | currency:'EGP' }}</dd>
+            </div>
+            }
+            @if (formData().affiliatesSubsidiaries > 0) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">الشركات التابعة والفرعية (Affiliates and Subsidiaries)</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().affiliatesSubsidiaries | currency:'EGP' }}
+              </dd>
+            </div>
+            }
+            @if (formData().investmentsSukukIslamic > 0) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">الاستثمارات في السُّكُوك الإسلامية (Investments in Sukuk Islamic)</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().investmentsSukukIslamic| currency:'EGP' }}
+              </dd>
+            </div>
+            }
+            @if (formData().receivablesTrade > 0) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">الديون التجارية (Receivables Trade)</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().receivablesTrade| currency:'EGP' }}</dd>
+            </div>
+            }
+            @if (formData().receivableNotes > 0) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">الديون المُستحقة (Receivable Notes)</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().receivableNotes| currency:'EGP' }}</dd>
+            </div>
+            }
+            @if (formData().incomeAccrued > 0) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">الإيرادات المستحقة (Income Accrued)</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().incomeAccrued| currency:'EGP' }}</dd>
+            </div>
+            }
+            @if (formData().handOnCash > 0) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">السيولة النقدية (Cash in Hand)</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().handOnCash| currency:'EGP' }}</dd>
+            </div>
+            }
+            @if (formData().accountsCurrentDepositsBank > 0) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">الحسابات الجارية في البنوك (Accounts Current Deposits in Banks)</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().accountsCurrentDepositsBank| currency:'EGP'
+                }}</dd>
+            </div>
+            }
+            @if (formData().depositsStatutory > 0) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">الإيداعات القانونية (Statutory Deposits)</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().depositsStatutory| currency:'EGP' }}</dd>
+            </div>
+            }
+            @if (formData().securitiesTrading > 0) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600"> الاستثمارات في الأسهم بغرض المتاجرة
+              </dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().securitiesTrading| currency:'EGP' }}</dd>
+            </div>
+            }
+            @if (formData().partiesThirdWithDeposits > 0) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">الخصوم من الأطراف الثالثة (Parties Third With Deposits)</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().partiesThirdWithDeposits| currency:'EGP' }}
+              </dd>
+            </div>
+            }
+          </dl>
+        </div>
+      </div>
+
+      <!-- الخصوم -->
+      <div class="space-y-4 rounded-lg border border-slate-200 p-4 mt-4">
+        <h3 class="font-bold text-lg text-red-700 border-b pb-2 mb-2">الالتزامات</h3>
+        <div class="flow-root">
+          <dl class="-my-3 divide-y divide-slate-100 text-sm">
+
+            @if (formData().assetsFixedProvisionDepreciation > 0) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">مخصص استهلاك الموجودات الثابتة</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().assetsFixedProvisionDepreciation |
+                currency:'EGP' }}</dd>
+            </div>
+            }
+
+            @if (formData().provisionOverhaulMaintenance > 0) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">مخصص الصيانة أو العمرة</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().provisionOverhaulMaintenance |
+                currency:'EGP' }}</dd>
+            </div>
+            }
+
+            @if (formData().assetsProvisionInsurance > 0) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">مخصص التأمين على الموجودات</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().assetsProvisionInsurance | currency:'EGP' }}
+              </dd>
+            </div>
+            }
+
+            @if (formData().investmentsProvisionImpairment > 0) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">مخصص هبوط قيمة الاستثمارات</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().investmentsProvisionImpairment |
+                currency:'EGP' }}</dd>
+            </div>
+            }
+
+            @if (formData().debtsDoubtfulAllowance > 0) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">مخصص الديون المشكوك في تحصيلها</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().debtsDoubtfulAllowance | currency:'EGP' }}
+              </dd>
+            </div>
+            }
+
+            @if (formData().discountsCashProvision > 0) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">مخصص الخصم النقدي</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().discountsCashProvision | currency:'EGP' }}
+              </dd>
+            </div>
+            }
+
+            @if (formData().payableAccounts > 0) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">الدائنون</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().payableAccounts | currency:'EGP' }}</dd>
+            </div>
+            }
+
+            @if (formData().payableNotes > 0) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">أوراق الدفع</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().payableNotes | currency:'EGP' }}</dd>
+            </div>
+            }
+
+            @if (formData().loansTermShort > 0) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">القروض القصيرة الأجل</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().loansTermShort | currency:'EGP' }}</dd>
+            </div>
+            }
+
+            @if (formData().debtTermLongPortionCurrent > 0) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">القسط الواجب السداد من القروض الطويلة</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().debtTermLongPortionCurrent | currency:'EGP'
+                }}</dd>
+            </div>
+            }
+
+            @if (formData().expensesAccrued > 0) {
+            <div class="grid grid-cols-2 gap-1 py-3">
+              <dt class="text-slate-600">المصروفات المستحقة</dt>
+              <dd class="text-end font-medium text-slate-800">{{ formData().expensesAccrued | currency:'EGP' }}</dd>
+            </div>
+            }
+
+          </dl>
+        </div>
+      </div>
+
+
+
+      <!-- نتيجة حساب الزكاة -->
+      @if (errorMessage()) {
+      <div class="mb-6 p-4 bg-red-50 border-r-4 border-red-500 rounded flex items-center gap-3 transition-all">
+        <svg class="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span class="text-red-700 font-medium">{{ errorMessage() }}</span>
+      </div>
+      }
+
+      }
+      }
+      @if (currentStep() > 0) {
+      <div class="flex justify-between mt-8">
+        <button (click)="back()"
+          class="px-6 py-2 bg-slate-200 text-slate-700 font-semibold rounded-lg hover:bg-slate-300 transition-colors">
+          رجوع
+        </button>
+
+        @if (currentStep() < steps().length - 1) { <button (click)="next()"
+          class="px-6 py-2 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition-colors">
+          التالي
+          </button>
+          } @else {
+          <button (click)="calculate()" [disabled]="isCalculating()"
+            class="px-6 py-2 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition-colors flex items-center justify-center w-45 disabled:opacity-75 disabled:cursor-not-allowed">
+            @if (isCalculating()) {
+            <svg class="animate-spin -ms-1 me-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+              viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+              </path>
+            </svg>
+            <span>جاري الحساب...</span>
+            } @else {
+            <span>احسب الزكاة</span>
+            }
+          </button>
+          }
+      </div>
+      }
+    </div>
+
+    <!-- Navigation -->
+  </div>
+</div>

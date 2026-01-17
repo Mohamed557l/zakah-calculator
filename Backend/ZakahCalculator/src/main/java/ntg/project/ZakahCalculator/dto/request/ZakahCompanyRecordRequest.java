@@ -48,7 +48,6 @@ public class ZakahCompanyRecordRequest {
     private BigDecimal generatingFixedAssets;//new item
 
     //Liabilities
-
     @NotNull(message = "هذا الحقل مطلوب، من فضلك لا تتركه فارغًا.")
     @PositiveOrZero(message = "من فضلك أدخل رقمًا أكبر من أو يساوي صفر.")
     private BigDecimal accountsPayable;

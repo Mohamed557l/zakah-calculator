@@ -111,6 +111,18 @@ export const routes: Routes = [
           import('./components/company/after-calc/after-calc.component')
             .then(m => m.AfterCalcComponent),
       },
+      {
+        path: 'company-software/wizard',
+        loadComponent: () =>
+          import('./components/company/wizards-company/wizard-software-company/wizard-software-company.component')
+            .then(m => m.WizardSoftwareCompanyComponent),
+      },
+      {
+        path: 'company-software/wizard',
+        loadComponent: () =>
+          import('./components/company/wizards-company/wizard-software-company/wizard-software-company.component')
+            .then(m => m.WizardSoftwareCompanyComponent),
+      },
     ],
   },
 

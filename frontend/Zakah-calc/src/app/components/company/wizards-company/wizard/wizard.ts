@@ -19,7 +19,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./wizard.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ZakahCompanyRecordComponent { 
+export class ZakahCompanyRecordComponent {
   private excelService = inject(ZakahCompanyExcelService);
   zakahService = inject(ZakahCompanyRecordService);
   private router = inject(Router);
@@ -79,11 +79,21 @@ export class ZakahCompanyRecordComponent {
     key: keyof ZakahCompanyRecordRequest,
     value: number | string
   ): string | null {
+
+    // required
     if (value === null || value === undefined || value === '') {
       return 'هذا الحقل مطلوب';
     }
 
-    if (typeof value === 'number' && value < 0) {
+    // prevent characters (non-numeric strings)
+    if (typeof value === 'string' && isNaN(Number(value))) {
+      return 'من فضلك أدخل رقمًا صحيحًا';
+    }
+
+    const numericValue = Number(value);
+
+    // negative number
+    if (!isNaN(numericValue) && numericValue < 0) {
       return 'القيمة لا يمكن أن تكون سالبة';
     }
 
@@ -171,8 +181,8 @@ export class ZakahCompanyRecordComponent {
           shortTermLiability: excelData.shortTermLiability || 0,
           yearlyLongTermLiabilities: excelData.yearlyLongTermLiabilities || 0,
           goldPrice: excelData.goldPrice || 0,
-          balanceSheetDate: excelData.balanceSheetDate 
-            ? this.normalizeToISO(excelData.balanceSheetDate.toString()) 
+          balanceSheetDate: excelData.balanceSheetDate
+            ? this.normalizeToISO(excelData.balanceSheetDate.toString())
             : new Date().toISOString().split('T')[0],
           netProfit: excelData.netProfit || 0,
           generatingFixedAssets: excelData.generatingFixedAssets || 0,
@@ -209,8 +219,8 @@ export class ZakahCompanyRecordComponent {
 
     this.zakahService.calculate().subscribe({
       next: (result) => {
-       this.zakahService.latestResult.set(result);
-       this.isCalculating.set(false);
+        this.zakahService.latestResult.set(result);
+        this.isCalculating.set(false);
         this.router.navigate(['/company/after-calc']);
       },
       error: (err) => {
@@ -221,7 +231,7 @@ export class ZakahCompanyRecordComponent {
       complete: () => {
         this.isCalculating.set(false);
       }
-    }); 
+    });
   }
 
   // ================= Display =================

@@ -16,7 +16,7 @@ export interface ZakahCompanyRecordResponse {
   accountsPayable: number;
   accruedExpenses: number;
   shortTermLiability: number;
-  yearlyLongTermLiabilities: number;
+  yearlyLongTermLiabilities: number; 
   contraAssets: number;
   provisionsUnderLiabilities: number;
 

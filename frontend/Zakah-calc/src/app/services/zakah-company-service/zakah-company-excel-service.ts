@@ -34,7 +34,7 @@ export class ZakahCompanyExcelService {
           const result: ZakahCompanyRecordRequest = {
             balanceSheetDate: this.formatDate(new Date()), // تاريخ اليوم كافتراضي
             cashEquivalents: this.toNumber(firstRow['Cash Equivalents']),
-            accountsReceivable: this.toNumber(firstRow['Accounts Receivable']),
+            accountsReceivable: this.toNumber(firstRow['Accounts Receivable']) ,
             inventory: this.toNumber(firstRow['Inventory']),
             investment: this.toNumber(firstRow['Investment']),
             accountsPayable: this.toNumber(firstRow['Accounts Payable']),
